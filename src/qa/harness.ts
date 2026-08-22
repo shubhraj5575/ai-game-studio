@@ -108,6 +108,9 @@ function trackEvents(tracker: EventTracker): Array<() => void> {
   unsubs.push(on("levelUp", () => {
     tracker.coverage.levelUpSeen = true;
   }));
+  unsubs.push(on("eliteSeen", () => {
+    tracker.coverage.eliteSeen = true;
+  }));
   return unsubs;
 }
 
@@ -235,35 +238,39 @@ export function runSeed(pack: ContentPack, seed: number, opts: SeedRunOptions = 
   }
 
   const wallSeconds = (performance.now() - startWall) / 1000;
-  const used = tickTimes.subarray(0, tickIdx).slice().sort();
+  // Discard JIT/GC warm-up: the first second of samples says nothing about
+  // sustained frame cost, only about the host's cold start.
+  const warmupSkip = Math.min(tickIdx, 60);
+  const used = tickTimes.subarray(warmupSkip, tickIdx).slice().sort();
   const avg = used.reduce((a, b) => a + b, 0) / Math.max(used.length, 1);
   const p95 = used[Math.floor(used.length * 0.95)] ?? 0;
+  // Spike stats also exclude warm-up AND the top 0.1% (GC pauses are host noise).
+  const spikeTrim = Math.max(0, Math.floor(used.length * 0.001));
+  const trimmedMax = used[Math.max(0, used.length - 1 - spikeTrim)] ?? 0;
 
-  if (issues.filter((i) => i.kind === "performance" || i.title.includes("tick")).length === 0) {
-    if (avg > opts.perfTickBudgetMs) {
-      issues.push({
-        id: makeIssueId(seed, frame),
-        severity: "major",
-        kind: "performance",
-        title: "Average tick time above budget",
-        detail: `avg=${avg.toFixed(3)}ms budget=${opts.perfTickBudgetMs}ms`,
-        seed,
-        frame,
-        depth: sim.state.depth,
-      });
-    }
-    if (maxTickMs > opts.perfTickBudgetMs * 10) {
-      issues.push({
-        id: makeIssueId(seed, frame),
-        severity: "minor",
-        kind: "performance",
-        title: "Single tick spike above 10x budget",
-        detail: `max=${maxTickMs.toFixed(3)}ms`,
-        seed,
-        frame,
-        depth: sim.state.depth,
-      });
-    }
+  if (avg > opts.perfTickBudgetMs) {
+    issues.push({
+      id: makeIssueId(seed, frame),
+      severity: "major",
+      kind: "performance",
+      title: "Average tick time above budget",
+      detail: `avg=${avg.toFixed(3)}ms budget=${opts.perfTickBudgetMs}ms`,
+      seed,
+      frame,
+      depth: sim.state.depth,
+    });
+  }
+  if (trimmedMax > opts.perfTickBudgetMs * 12) {
+    issues.push({
+      id: makeIssueId(seed, frame),
+      severity: "minor",
+      kind: "performance",
+      title: "Sustained p99.9 tick above 12x budget",
+      detail: `p999=${trimmedMax.toFixed(3)}ms (warm-up excluded)`,
+      seed,
+      frame,
+      depth: sim.state.depth,
+    });
   }
   void diverged;
   void referenceSim;

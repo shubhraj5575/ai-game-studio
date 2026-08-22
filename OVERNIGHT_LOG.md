@@ -59,3 +59,9 @@
 - Outcome: **blocked**
 - QA: REJECT · Perf: PASS · fix iterations: 3 · engine issues: 0
 - Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/fixloop-test/artifacts
+
+## Studio run — 2026-08-22T20:18:17.522Z
+
+- Outcome: **released** at v0.1.8
+- QA: PASS · Perf: PASS · fix iterations: 1 · engine issues: 0
+- Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/2026-08-22T20-17-14/artifacts

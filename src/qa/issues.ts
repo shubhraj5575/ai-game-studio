@@ -46,6 +46,7 @@ export interface CoverageFlags {
   descended: boolean;
   saveLoadChecked: boolean;
   levelUpSeen: boolean;
+  eliteSeen: boolean;
 }
 
 export function emptyCoverage(): CoverageFlags {
@@ -65,6 +66,7 @@ export function emptyCoverage(): CoverageFlags {
     descended: false,
     saveLoadChecked: false,
     levelUpSeen: false,
+  eliteSeen: false,
   };
 }
 

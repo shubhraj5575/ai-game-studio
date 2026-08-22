@@ -96,6 +96,16 @@ export interface NpcDef {
   color: string;
 }
 
+export interface EliteAffixDef {
+  id: string;
+  name: string;
+  hpMult: number;
+  dmgMult: number;
+  speedMult: number;
+  rewardMult: number;
+  color: string;
+}
+
 export interface FloorConfig {
   depth: number;
   mapWidth: number;
@@ -114,6 +124,8 @@ export interface FloorConfig {
   floorNameTemplates: string[];
   ambientTint: string;
   musicScaleId: string;
+  /** Probability any given non-boss enemy spawns as an elite (0..0.6). */
+  eliteChance?: number;
 }
 
 export interface PlayerTuning {
@@ -222,6 +234,7 @@ export interface ContentPack {
   floors: FloorConfig[];
   narrative: NarrativeTables;
   audio: AudioTheme;
+  eliteAffixes?: EliteAffixDef[];
 }
 
 /** Thrown when a content pack fails validation; message lists all problems. */
@@ -296,7 +309,20 @@ export function validateContentPack(pack: unknown): string[] {
       if (!(s.weight > 0)) problems.push(`floor ${f.depth}: spawn weight must be > 0 (${s.enemyId})`);
     }
     if (!f.floorNameTemplates?.length) problems.push(`floor ${f.depth}: no floor name templates`);
+    if (f.eliteChance !== undefined && !(f.eliteChance >= 0 && f.eliteChance <= 0.6)) {
+      problems.push(`floor ${f.depth}: eliteChance out of [0,0.6]`);
+    }
   });
+
+  // Elite affixes sane.
+  const eliteIds = new Set<string>();
+  for (const a of p.eliteAffixes ?? []) {
+    if (eliteIds.has(a.id)) problems.push(`duplicate elite affix id ${a.id}`);
+    eliteIds.add(a.id);
+    for (const [k, v] of [["hpMult", a.hpMult], ["dmgMult", a.dmgMult], ["speedMult", a.speedMult], ["rewardMult", a.rewardMult]] as const) {
+      if (!(v >= 1 && v <= 3)) problems.push(`elite affix ${a.id}: ${k} out of [1,3]`);
+    }
+  }
 
   // Quest templates reference real items in rewards.
   for (const q of p.questTemplates ?? []) {

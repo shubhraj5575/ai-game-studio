@@ -1,22 +1,22 @@
 {
   "meta": {
-    "title": "Cinder Depths",
-    "tagline": "The mire swallowed Duskmire centuries ago.",
-    "version": "0.0.0",
-    "patch": 0,
-    "seedBase": 3013178097,
+    "title": "Ember Court",
+    "tagline": "Below Gloamreach, miners dug past the bottom of their maps and heard singing.",
+    "version": "0.1.8",
+    "patch": 1,
+    "seedBase": 2324603160,
     "generator": "ai-game-studio",
-    "createdAtIso": "2026-08-22T19:32:59.019Z"
+    "createdAtIso": "2026-08-22T20:17:14.690Z"
   },
   "palette": {
-    "background": "#0b1109",
-    "wallTop": "#2d3e28",
-    "wallFace": "#1a2617",
-    "floorA": "#232f20",
-    "floorB": "#1d271b",
-    "accent": "#4a47f5",
+    "background": "#110a09",
+    "wallTop": "#3e2f28",
+    "wallFace": "#261c17",
+    "floorA": "#2f2620",
+    "floorB": "#27201b",
+    "accent": "#47f5a7",
     "danger": "#ef4539",
-    "friendly": "#e9c963",
+    "friendly": "#e963c1",
     "gold": "#ffd700",
     "uiPanel": "#141824ee",
     "uiText": "#e8e6df"
@@ -62,7 +62,7 @@
       "name": "Cinder Ooze",
       "minDepth": 1,
       "hp": 10,
-      "speed": 2.22,
+      "speed": 2.15,
       "damage": 4,
       "radius": 0.34,
       "attackRange": 0.9,
@@ -81,7 +81,7 @@
       "name": "Ash Imp",
       "minDepth": 1,
       "hp": 10,
-      "speed": 2.73,
+      "speed": 2.61,
       "damage": 4,
       "radius": 0.3,
       "attackRange": 6,
@@ -100,8 +100,8 @@
       "id": "skitter",
       "name": "Vault Skitterer",
       "minDepth": 1,
-      "hp": 10,
-      "speed": 2.25,
+      "hp": 11,
+      "speed": 2.11,
       "damage": 4,
       "radius": 0.34,
       "attackRange": 0.9,
@@ -119,8 +119,8 @@
       "id": "spitter",
       "name": "Soot Spitter",
       "minDepth": 2,
-      "hp": 13,
-      "speed": 2.62,
+      "hp": 14,
+      "speed": 2.72,
       "damage": 5,
       "radius": 0.3,
       "attackRange": 6,
@@ -139,8 +139,8 @@
       "id": "brute",
       "name": "Gloom Brute",
       "minDepth": 2,
-      "hp": 13,
-      "speed": 1.86,
+      "hp": 14,
+      "speed": 1.79,
       "damage": 11,
       "radius": 0.44,
       "attackRange": 2.4,
@@ -159,7 +159,7 @@
       "name": "Gloom Wisp",
       "minDepth": 3,
       "hp": 18,
-      "speed": 2.79,
+      "speed": 2.62,
       "damage": 7,
       "radius": 0.3,
       "attackRange": 6,
@@ -179,7 +179,7 @@
       "name": "Kiln Hulk",
       "minDepth": 3,
       "hp": 17,
-      "speed": 1.79,
+      "speed": 1.82,
       "damage": 14,
       "radius": 0.44,
       "attackRange": 2.4,
@@ -611,8 +611,8 @@
   "floors": [
     {
       "depth": 1,
-      "mapWidth": 41,
-      "mapHeight": 41,
+      "mapWidth": 36,
+      "mapHeight": 36,
       "roomTargetMin": 5,
       "roomTargetMax": 6,
       "enemyBudgetBase": 5,
@@ -639,18 +639,19 @@
         "peddler"
       ],
       "questCount": 2,
+      "eliteChance": 0,
       "floorNameTemplates": [
-        "The {adj} Approach",
-        "Ashen Approach",
-        "The Approach of Duskmire"
+        "The {adj} Court",
+        "Rootbound Court",
+        "The Court of Gloamreach"
       ],
       "ambientTint": "rgb(26,32,48)",
       "musicScaleId": "minorPentatonic"
     },
     {
       "depth": 2,
-      "mapWidth": 44,
-      "mapHeight": 44,
+      "mapWidth": 36,
+      "mapHeight": 36,
       "roomTargetMin": 5,
       "roomTargetMax": 7,
       "enemyBudgetBase": 5.4,
@@ -680,18 +681,19 @@
         "elder-quartermaster"
       ],
       "questCount": 1,
+      "eliteChance": 0.12,
       "floorNameTemplates": [
-        "The {adj} Depths",
-        "Flooded Depths",
-        "The Depths of Duskmire"
+        "The {adj} Cisterns",
+        "Silent Cisterns",
+        "The Cisterns of Gloamreach"
       ],
       "ambientTint": "rgb(32,32,41)",
       "musicScaleId": "dorian"
     },
     {
       "depth": 3,
-      "mapWidth": 47,
-      "mapHeight": 47,
+      "mapWidth": 36,
+      "mapHeight": 36,
       "roomTargetMin": 5,
       "roomTargetMax": 7,
       "enemyBudgetBase": 5.8,
@@ -718,19 +720,20 @@
       "chestCount": 3,
       "hasShrine": false,
       "npcIds": [],
-      "questCount": 1,
+      "questCount": 0,
+      "eliteChance": 0.24,
       "floorNameTemplates": [
-        "The {adj} Undercroft",
-        "Broken Undercroft",
-        "The Undercroft of Duskmire"
+        "The {adj} Warrens",
+        "Pale Warrens",
+        "The Warrens of Gloamreach"
       ],
       "ambientTint": "rgb(38,31,33)",
       "musicScaleId": "minorPentatonic"
     },
     {
       "depth": 4,
-      "mapWidth": 50,
-      "mapHeight": 50,
+      "mapWidth": 36,
+      "mapHeight": 36,
       "roomTargetMin": 5,
       "roomTargetMax": 8,
       "enemyBudgetBase": 6.2,
@@ -759,55 +762,56 @@
       "hasShrine": true,
       "npcIds": [],
       "questCount": 0,
+      "eliteChance": 0.35,
       "floorNameTemplates": [
-        "The {adj} Archives",
-        "Pale Archives",
-        "The Archives of Duskmire"
+        "The {adj} Galleries",
+        "Blackened Galleries",
+        "The Galleries of Gloamreach"
       ],
       "ambientTint": "rgb(44,31,26)",
       "musicScaleId": "phrygian"
     }
   ],
   "narrative": {
-    "worldName": "Duskmire",
-    "premise": "The mire swallowed Duskmire centuries ago. Its flooded vaults still glow with stolen fire — and something tends it.",
+    "worldName": "Gloamreach",
+    "premise": "Below Gloamreach, miners dug past the bottom of their maps and heard singing. Follow the tunnels down before the song finishes.",
     "floorAdjectives": [
-      "Blackened",
-      "Shivering",
-      "Nameless",
-      "Ashen",
-      "Forgotten",
-      "Silent",
-      "Flooded",
-      "Cracked",
       "Sunken",
+      "Ashen",
+      "Nameless",
+      "Rootbound",
+      "Rusted",
+      "Hollow",
+      "Silent",
       "Broken",
       "Withered",
-      "Smoldering",
       "Pale",
+      "Cracked",
+      "Smoldering",
+      "Blackened",
+      "Flooded",
       "Echoing",
-      "Sooty",
-      "Hollow",
-      "Rusted",
       "Warded",
-      "Molten",
-      "Rootbound"
+      "Forgotten",
+      "Sooty",
+      "Shivering",
+      "Molten"
     ],
     "floorNouns": [
-      "Passage",
-      "Approach",
       "Depths",
-      "Undercroft",
-      "Archives",
-      "Galleries",
-      "Halls",
-      "Warrens",
-      "Stairs",
-      "Kilns",
-      "Vaults",
+      "Court",
       "Cisterns",
+      "Warrens",
+      "Galleries",
+      "Kilns",
+      "Halls",
+      "Passage",
+      "Archives",
+      "Undercroft",
+      "Vaults",
+      "Stairs",
       "Foundry",
-      "Court"
+      "Approach"
     ],
     "itemPrefixes": {
       "common": [
@@ -828,21 +832,21 @@
       ]
     },
     "loreFragments": [
-      "The wardens drew lots. The loser kept the last shift.",
-      "What you hear dripping is not water.",
       "The furnace was never meant to go cold.",
-      "Some doors remember being opened and resent it.",
+      "The wardens drew lots. The loser kept the last shift.",
       "Maps lie at the fourth landing. Trust your feet instead.",
-      "They sealed the stairs from below, not above."
+      "They sealed the stairs from below, not above.",
+      "What you hear dripping is not water.",
+      "Some doors remember being opened and resent it."
     ],
     "victoryText": "The furnace breathes again. Dawn finds you climbing, singed but grinning.",
-    "defeatText": "The depths keep what they take."
+    "defeatText": "Your ember joins the others down here. Someone will find it."
   },
   "audio": {
     "masterVolume": 0.85,
     "sfxVolume": 0.9,
     "musicVolume": 0.32,
-    "musicTempoBpm": 101,
+    "musicTempoBpm": 90,
     "scales": {
       "minorPentatonic": [
         220,
@@ -960,5 +964,34 @@
         "sweepExp": true
       }
     }
-  }
+  },
+  "eliteAffixes": [
+    {
+      "id": "furious",
+      "name": "Furious",
+      "hpMult": 1,
+      "dmgMult": 1.35,
+      "speedMult": 1.15,
+      "rewardMult": 1.6,
+      "color": "#ff5a5a"
+    },
+    {
+      "id": "shielded",
+      "name": "Shielded",
+      "hpMult": 1.6,
+      "dmgMult": 1,
+      "speedMult": 1,
+      "rewardMult": 1.5,
+      "color": "#7fa8ff"
+    },
+    {
+      "id": "hasty",
+      "name": "Hasty",
+      "hpMult": 1.1,
+      "dmgMult": 1.05,
+      "speedMult": 1.3,
+      "rewardMult": 1.5,
+      "color": "#7ec850"
+    }
+  ]
 }

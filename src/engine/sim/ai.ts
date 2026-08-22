@@ -127,6 +127,7 @@ function behaveMelee(
   sim: Simulation, e: Entity, player: Entity, dt: number, d: number, seenRecently: boolean,
 ): void {
   const def = sim.enemyDef(e.defId!)!;
+  const spd = def.speed * (1 + speedAffixBonus(sim, e));
   const mem = e.ai!;
   e.attackTimer = Math.max(0, (e.attackTimer ?? 0) - dt);
 
@@ -140,12 +141,12 @@ function behaveMelee(
       e.windupTimer = 0.38;
       return;
     }
-    steerAlongPathOrDirect(sim, e, player.pos, dt, def.speed);
+    steerAlongPathOrDirect(sim, e, player.pos, dt, spd);
   } else if (mem.targetPos && mem.alertness >= 0.25) {
     mem.state = "investigate";
-    investigate(sim, e, dt, def.speed * 0.8);
+    investigate(sim, e, dt, spd * 0.8);
   } else {
-    patrol(sim, e, dt, def.speed * 0.5);
+    patrol(sim, e, dt, spd * 0.5);
   }
 }
 
@@ -153,6 +154,7 @@ function behaveRanged(
   sim: Simulation, e: Entity, player: Entity, dt: number, d: number, seenRecently: boolean,
 ): void {
   const def = sim.enemyDef(e.defId!)!;
+  const spd = def.speed * (1 + speedAffixBonus(sim, e));
   const mem = e.ai!;
   e.attackTimer = Math.max(0, (e.attackTimer ?? 0) - dt);
 
@@ -170,7 +172,7 @@ function behaveRanged(
     // Maintain preferred band [attackRange*0.55 .. attackRange].
     const idealMin = def.attackRange * 0.55;
     if (!los || d > def.attackRange * 0.95) {
-      steerAlongPathOrDirect(sim, e, player.pos, dt, def.speed);
+      steerAlongPathOrDirect(sim, e, player.pos, dt, spd);
     } else if (d < idealMin) {
       // Back away while strafing.
       const away = vnorm(vsub(e.pos, player.pos));
@@ -178,18 +180,18 @@ function behaveRanged(
       moveEnemy(sim, e, {
         x: away.x * 0.8 + side.x * 0.6,
         y: away.y * 0.8 + side.y * 0.6,
-      }, def.speed);
+      }, spd);
     } else {
       // Orbit.
       const away = vnorm(vsub(e.pos, player.pos));
       const side = { x: -away.y * mem.strafeDir, y: away.x * mem.strafeDir };
-      moveEnemy(sim, e, side, def.speed * 0.7);
+      moveEnemy(sim, e, side, spd * 0.7);
     }
   } else if (mem.targetPos && mem.alertness >= 0.25) {
     mem.state = "investigate";
-    investigate(sim, e, dt, def.speed * 0.8);
+    investigate(sim, e, dt, spd * 0.8);
   } else {
-    patrol(sim, e, dt, def.speed * 0.5);
+    patrol(sim, e, dt, spd * 0.5);
   }
 }
 
@@ -197,15 +199,16 @@ function behaveCharger(
   sim: Simulation, e: Entity, player: Entity, dt: number, d: number, seenRecently: boolean,
 ): void {
   const def = sim.enemyDef(e.defId!)!;
+  const spd = def.speed * (1 + speedAffixBonus(sim, e));
   const mem = e.ai!;
   e.attackTimer = Math.max(0, (e.attackTimer ?? 0) - dt);
 
   if (mem.state === "charge") {
     mem.chargeTimeLeft -= dt;
-    moveEnemy(sim, e, mem.chargeVec!, def.speed * 3.1);
+    moveEnemy(sim, e, mem.chargeVec!, spd * (1 + speedAffixBonus(sim, e)) * 3.1);
     // Contact damage during charge.
     if (vdist(e.pos, player.pos) <= e.radius + player.radius + 0.08) {
-      hitPlayer(sim, def.damage, `${def.name} charge`);
+      hitPlayer(sim, def.damage * sim.eliteDmgMult(e), sim.eliteLabel(e, `${def.name} charge`));
       mem.state = "chase";
       e.attackTimer = def.attackCooldownSec;
       mem.chargeVec = null;
@@ -228,12 +231,12 @@ function behaveCharger(
       e.windupTimer = 0.5;
       return;
     }
-    steerAlongPathOrDirect(sim, e, player.pos, dt, def.speed);
+    steerAlongPathOrDirect(sim, e, player.pos, dt, spd);
   } else if (mem.targetPos && mem.alertness >= 0.25) {
     mem.state = "investigate";
-    investigate(sim, e, dt, def.speed * 0.8);
+    investigate(sim, e, dt, spd * 0.8);
   } else {
-    patrol(sim, e, dt, def.speed * 0.5);
+    patrol(sim, e, dt, spd * 0.5);
   }
 }
 
@@ -277,6 +280,13 @@ function inArc(from: Entity, target: Vec2, range: number): boolean {
 
 function hitPlayer(sim: Simulation, rawDamage: number, sourceName: string): void {
   sim.damagePlayer(rawDamage, sourceName);
+}
+
+/** Elite speed bonuses apply to base locomotion (charge multiplier unchanged). */
+function speedAffixBonus(sim: Simulation, e: Entity): number {
+  if (!e.eliteAffixId) return 0;
+  const mult = sim.pack.eliteAffixes?.find((a) => a.id === e.eliteAffixId)?.speedMult ?? 1;
+  return Math.max(0, mult - 1);
 }
 
 function hitWallThisMove(sim: Simulation, _e: Entity): boolean {

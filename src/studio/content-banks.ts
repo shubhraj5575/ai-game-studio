@@ -184,3 +184,9 @@ export const VICTORY_TEXTS = [
   "The furnace breathes again. Dawn finds you climbing, singed but grinning.",
   "The deep is quiet now — the good kind of quiet, for once.",
 ];
+
+export const ELITE_AFFIXES = [
+  { id: "furious", name: "Furious", hpMult: 1.0, dmgMult: 1.35, speedMult: 1.15, rewardMult: 1.6, color: "#ff5a5a" },
+  { id: "shielded", name: "Shielded", hpMult: 1.6, dmgMult: 1.0, speedMult: 1.0, rewardMult: 1.5, color: "#7fa8ff" },
+  { id: "hasty", name: "Hasty", hpMult: 1.1, dmgMult: 1.05, speedMult: 1.3, rewardMult: 1.5, color: "#7ec850" },
+];

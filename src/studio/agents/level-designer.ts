@@ -46,6 +46,8 @@ readonly id = "levels";
 
       const isFinal = d === depthCount;
       const boss = isFinal ? rng.pick(BOSS_BANK).id : undefined;
+      // Elites ramp from absent to common-ish by the final depth.
+      const eliteChance = depthCount <= 1 ? 0 : Math.min(0.35, (d - 1) * 0.12);
 
       floors.push({
         depth: d,
@@ -62,6 +64,7 @@ readonly id = "levels";
         hasShrine: d === 1 || d % 2 === 0 || isFinal ? true : rng.chance(0.5),
         npcIds: npcPlanFor(d, depthCount),
         questCount: d <= 2 ? (d === 1 ? 2 : 1) : rng.chance(0.4) ? 1 : 0,
+        eliteChance,
         floorNameTemplates: [], // filled by narrative pass
         ambientTint: ambientFor(d, depthCount),
         musicScaleId: d === depthCount ? "phrygian" : d % 2 === 0 ? "dorian" : "minorPentatonic",

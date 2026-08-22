@@ -171,6 +171,13 @@ export class Renderer {
     ctx.restore();
     this.drawFloatingTexts(originX, originY);
 
+    // Depth ambience: subtle per-floor tint over the world.
+    const cfg = sim.floorConfig(s.depth);
+    if (cfg?.ambientTint) {
+      ctx.fillStyle = cfg.ambientTint.startsWith("#") ? hexToRgba(cfg.ambientTint, 0.16) : cfg.ambientTint.replace("rgb(", "rgba(").replace(")", ",0.16)");
+      ctx.fillRect(0, 0, W, H);
+    }
+
     // Darkness vignette (screen-space).
     const grad = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.32, W / 2, H / 2, Math.max(W, H) * 0.72);
     grad.addColorStop(0, "rgba(0,0,0,0)");
@@ -322,6 +329,25 @@ export class Renderer {
         const def = sim.enemyDef(e.defId!);
         if (!def) break;
         const bob = Math.sin(sim.state.timeSec * 6 + e.bobPhase!) * 1.8;
+        // Elite aura.
+        const affix = e.eliteAffixId
+          ? sim.pack.eliteAffixes?.find((a) => a.id === e.eliteAffixId)
+          : undefined;
+        if (affix) {
+          const pulse = 0.5 + 0.3 * Math.sin(sim.state.timeSec * 5);
+          ctx.strokeStyle = affix.color;
+          ctx.globalAlpha = pulse;
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(px, py, r * 1.55, 0, Math.PI * 2); ctx.stroke();
+          ctx.beginPath();
+          for (let k = 0; k < 4; k++) {
+            const a0 = sim.state.timeSec * 1.2 + (k * Math.PI) / 2;
+            ctx.moveTo(px + Math.cos(a0) * r * 1.7, py + Math.sin(a0) * r * 1.7);
+            ctx.lineTo(px + Math.cos(a0) * r * 1.95, py + Math.sin(a0) * r * 1.95);
+          }
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
         // Windup telegraph.
         if ((e.windupTimer ?? 0) > 0) {
           const k = 1 + 0.35 * Math.sin(sim.state.timeSec * 30);
@@ -540,14 +566,27 @@ function rotatedRect(ctx: CanvasRenderingContext2D, cx: number, cy: number, w: n
 }
 
 function mix(a: string, b: string, t: number): string {
-  const pa = parseInt(a.slice(1), 16);
-  const pb = parseInt(b.slice(1), 16);
+  const pa = parseInt(hex6Of(a), 16);
+  const pb = parseInt(hex6Of(b), 16);
   const ar = (pa >> 16) & 255, ag = (pa >> 8) & 255, ab = pa & 255;
   const br = (pb >> 16) & 255, bg = (pb >> 8) & 255, bb = pb & 255;
   const rr = Math.round(ar + (br - ar) * t);
   const rg = Math.round(ag + (bg - ag) * t);
   const rb = Math.round(ab + (bb - ab) * t);
   return `rgb(${rr},${rg},${rb})`;
+}
+
+function hexToRgba(hex: string, alpha: number): string {
+  const p = parseInt(hex.slice(1), 16);
+  return `rgba(${(p >> 16) & 255},${(p >> 8) & 255},${p & 255},${alpha})`;
+}
+
+function hex6Of(c: string): string {
+  if (c.startsWith("#")) return c.slice(1, 7).padEnd(6, "0");
+  const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!m) return "000000";
+  const part = (n: string): string => Number(n).toString(16).padStart(2, "0");
+  return `${part(m[1]!)}${part(m[2]!)}${part(m[3]!)}`;
 }
 
 function flashHurtVignette(): void {

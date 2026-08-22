@@ -39,6 +39,8 @@ export interface Entity {
 
   // Enemy archetype reference:
   defId?: string;
+  /** Elite affix id when this enemy spawned enhanced. */
+  eliteAffixId?: string;
 
   // AI memory (enemies):
   ai?: AiMemory;

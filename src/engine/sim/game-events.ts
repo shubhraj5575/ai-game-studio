@@ -28,6 +28,7 @@ export interface GameEvents {
   victory: { timeSec: number };
   npcTalk: { line: string };
   keyFound: { name: string };
+  eliteSeen: { affixId: string };
 }
 
 export const gameBus = new EventBus<GameEvents>();

@@ -267,11 +267,37 @@ export class Simulation {
     e.ai = initEnemyMemory();
     e.attackTimer = 0;
     e.bobPhase = this.rngMisc.next() * Math.PI * 2;
+
+    // Elite roll (never on bosses).
+    const cfg = this.floorConfig(this.state.depth);
+    const eliteChance = cfg?.eliteChance ?? 0;
+    if (eliteChance > 0 && this.rngMisc.next() < eliteChance && packEliteAffixes(this.pack).length > 0) {
+      const affixes = packEliteAffixes(this.pack);
+      const affix = affixes[this.rngMisc.int(0, affixes.length)]!;
+      e.maxHp = Math.max(1, Math.round(e.maxHp * affix.hpMult));
+      e.hp = e.maxHp;
+      e.radius = Math.min(0.7, e.radius * 1.15);
+      e.eliteAffixId = affix.id;
+      gameBus.emit("eliteSeen", { affixId: affix.id });
+    }
     return e;
   }
 
   enemyDef(id: string): EnemyDef | undefined {
     return this.pack.enemies.find((e) => e.id === id);
+  }
+
+  /** Damage multiplier for an enemy (elites scale up). */
+  eliteDmgMult(e: Entity): number {
+    if (!e.eliteAffixId) return 1;
+    return this.pack.eliteAffixes?.find((a) => a.id === e.eliteAffixId)?.dmgMult ?? 1;
+  }
+
+  /** Display label for damage attribution. */
+  eliteLabel(e: Entity, baseName: string): string {
+    if (!e.eliteAffixId) return baseName;
+    const affix = this.pack.eliteAffixes?.find((a) => a.id === e.eliteAffixId);
+    return affix ? `${affix.name} ${baseName}` : baseName;
   }
 
   floorConfig(depth: number): FloorConfig | undefined {
@@ -462,7 +488,9 @@ export class Simulation {
     s.stats.killsByType[def.id] = (s.stats.killsByType[def.id] ?? 0) + 1;
 
     // Gold drop.
-    const goldAmount = this.rngLoot.intInclusive(def.goldDropMin, def.goldDropMax);
+    const affix = e.eliteAffixId ? this.pack.eliteAffixes?.find((a) => a.id === e.eliteAffixId) : undefined;
+    const rewardMult = affix?.rewardMult ?? 1;
+    const goldAmount = Math.round(this.rngLoot.intInclusive(def.goldDropMin, def.goldDropMax) * rewardMult);
     if (goldAmount > 0) {
       const g = makeEntity(s, "gold", e.pos, 0.22);
       g.quantity = goldAmount;
@@ -481,7 +509,7 @@ export class Simulation {
       }
     }
 
-    grantXp(s, this.pack, def.xpReward);
+    grantXp(s, this.pack, Math.round(def.xpReward * rewardMult));
     onEnemyKilled(this, def.id);
 
     // Boss death unlocks the portal.
@@ -1056,6 +1084,10 @@ declare module "./state.js" {
   interface SimState {
     currentFloorSpawns?: unknown;
   }
+}
+
+function packEliteAffixes(pack: ContentPack): NonNullable<ContentPack["eliteAffixes"]> {
+  return pack.eliteAffixes ?? [];
 }
 
 function jitter(p: Vec2, rng: Rng, amount: number): Vec2 {

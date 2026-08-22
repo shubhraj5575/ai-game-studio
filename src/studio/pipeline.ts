@@ -164,6 +164,7 @@ export function runStudio(options: StudioOptions = {}): StudioRunResult {
         floors,
         narrative: narrativeTables,
         audio: audio.author(brief.targetDepthCount, brief.toneWords),
+        eliteAffixes: structuredClone(ELITE_AFFIXES),
       };
 
       // Level validation sweep against the draft pack.
@@ -331,7 +332,7 @@ export function runStudio(options: StudioOptions = {}): StudioRunResult {
 import type { ContentPack, ItemDef, LootTableDef, NpcDef, QuestTemplate } from "../engine/content/types.js";
 import type { BugIssue } from "../qa/issues.js";
 import { makeIssueId } from "../qa/issues.js";
-import { QUEST_TEMPLATES, NPC_BANK } from "./content-banks.js";
+import { QUEST_TEMPLATES, NPC_BANK, ELITE_AFFIXES } from "./content-banks.js";
 
 function perfIssuesAsBugs(report: { budgets: Record<string, { actual: number; budget: number; pass: boolean }> }): BugIssue[] {
   const out: BugIssue[] = [];
