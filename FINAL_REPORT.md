@@ -56,7 +56,7 @@ Eleven deterministic expert-system agents (Director, Designer, Narrative, System
 
 ## Testing
 
-58 vitest tests: engine units (RNG/procgen/save/sim-smoke), property suites (combat bounds, XP monotonicity, inventory conservation, 60-seed floor legality), studio fix-loop strategies, client-layer smoke under stubbed DOM/Canvas/WebAudio, plus generated regression pins. CI runs typecheck → tests → reproducible build → headless QA smoke on the shipped pack.
+60 vitest tests: engine units (RNG/procgen/save/sim-smoke), property suites (combat bounds, XP monotonicity, inventory conservation, 60-seed floor legality), studio fix-loop strategies, client-layer smoke under stubbed DOM/Canvas/WebAudio, plus generated regression pins. CI runs typecheck → tests → reproducible build → headless QA smoke on the shipped pack.
 
 ## Benchmarks / Performance
 
@@ -116,6 +116,7 @@ https://github.com/shubhraj5575/ai-game-studio (branch `main`, CI on push).
 | Sell economy loop (UI+bot+coverage+tests) | **COMPLETED** |
 | Replay capture/verification for human runs | **COMPLETED** |
 | Director multi-sprint memory | **COMPLETED** |
+| Client boot-path integration tests (rAF-driven real loop) | **COMPLETED** |
 | QA harness with reject authority | **COMPLETED** |
 | Autonomous fix loop + regression pins | **COMPLETED** |
 | Reproducible builds + perf budgets | **COMPLETED** |

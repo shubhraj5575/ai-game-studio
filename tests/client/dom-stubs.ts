@@ -75,7 +75,9 @@ export function makeEl(id: string): HTMLElement {
     innerHTML: "",
     appendChild: vi.fn(),
     addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
     disabled: false,
+    value: "",
     // Canvas-shaped elements (minimap) work through the same stub.
     width: 180,
     height: 180,

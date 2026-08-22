@@ -119,3 +119,13 @@ Also fixed mid-debugging: readPriorRun returned an object missing the very
 field its caller checked (probe logs showed vr=1 while behavior said
 undefined) — a reminder that instrumentation must observe the same values
 the code uses.
+
+## Milestone 7 — The last untested surface
+The client boot path (main.ts) had never executed under automation. Built a
+full browser-environment stub — controllable requestAnimationFrame queue,
+localStorage shim, listener registry, constructor-shaped WebAudio, injected
+CONTENT_PACK — and drove the REAL loop end-to-end: click New Descent through
+its actual handler, pump frames, move via keydown events, pause/resume via
+Escape, save, quit, continue from save. Two integration tests; found the
+boot-early-return on missing CONTENT_PACK and missing AudioContext fallback
+along the way. Suite now: 12 files / 60 tests, CI green.
