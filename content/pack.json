@@ -1,22 +1,22 @@
 {
   "meta": {
-    "title": "Furnace Undercroft",
-    "tagline": "Beneath the ruined citadel of Emberhold, an old furnace-god smolders.",
-    "version": "0.1.10",
+    "title": "Slag Depths",
+    "tagline": "Cindervault was built to contain a spark that never cooled.",
+    "version": "0.1.13",
     "patch": 0,
-    "seedBase": 816063438,
+    "seedBase": 417220827,
     "generator": "ai-game-studio",
-    "createdAtIso": "2026-08-22T20:39:09.424Z"
+    "createdAtIso": "2026-08-22T20:50:22.856Z"
   },
   "palette": {
-    "background": "#090f11",
-    "wallTop": "#28373e",
-    "wallFace": "#172026",
-    "floorA": "#20292f",
-    "floorB": "#1b2227",
-    "accent": "#f54790",
+    "background": "#110909",
+    "wallTop": "#3e2a28",
+    "wallFace": "#261917",
+    "floorA": "#2f2320",
+    "floorB": "#271e1b",
+    "accent": "#47f581",
     "danger": "#ef4539",
-    "friendly": "#63e98f",
+    "friendly": "#e963de",
     "gold": "#ffd700",
     "uiPanel": "#141824ee",
     "uiText": "#e8e6df"
@@ -24,7 +24,7 @@
   "systems": {
     "player": {
       "baseSpeed": 4.4,
-      "baseMaxHp": 32,
+      "baseMaxHp": 27,
       "baseDamage": 6,
       "baseDefense": 0,
       "attackRange": 1.55,
@@ -53,16 +53,16 @@
     "startingGold": 25,
     "potionPrice": 10,
     "priceVariancePct": 20,
-    "depthHpScale": 0.184,
-    "depthDamageScale": 0.12
+    "depthHpScale": 0.21849999999999997,
+    "depthDamageScale": 0.15
   },
   "enemies": [
     {
       "id": "ooze",
       "name": "Cinder Ooze",
       "minDepth": 1,
-      "hp": 11,
-      "speed": 2.17,
+      "hp": 9,
+      "speed": 2.09,
       "damage": 4,
       "radius": 0.34,
       "attackRange": 0.9,
@@ -81,7 +81,7 @@
       "name": "Ash Imp",
       "minDepth": 1,
       "hp": 12,
-      "speed": 2.71,
+      "speed": 2.63,
       "damage": 4,
       "radius": 0.3,
       "attackRange": 6,
@@ -100,8 +100,8 @@
       "id": "skitter",
       "name": "Vault Skitterer",
       "minDepth": 1,
-      "hp": 10,
-      "speed": 2.14,
+      "hp": 12,
+      "speed": 2.18,
       "damage": 4,
       "radius": 0.34,
       "attackRange": 0.9,
@@ -119,8 +119,8 @@
       "id": "spitter",
       "name": "Soot Spitter",
       "minDepth": 2,
-      "hp": 15,
-      "speed": 2.75,
+      "hp": 14,
+      "speed": 2.7,
       "damage": 5,
       "radius": 0.3,
       "attackRange": 6,
@@ -139,8 +139,8 @@
       "id": "brute",
       "name": "Gloom Brute",
       "minDepth": 2,
-      "hp": 14,
-      "speed": 1.75,
+      "hp": 13,
+      "speed": 1.77,
       "damage": 11,
       "radius": 0.44,
       "attackRange": 2.4,
@@ -158,8 +158,8 @@
       "id": "wisp",
       "name": "Gloom Wisp",
       "minDepth": 3,
-      "hp": 16,
-      "speed": 2.63,
+      "hp": 18,
+      "speed": 2.76,
       "damage": 7,
       "radius": 0.3,
       "attackRange": 6,
@@ -179,7 +179,7 @@
       "name": "Kiln Hulk",
       "minDepth": 3,
       "hp": 17,
-      "speed": 1.72,
+      "speed": 1.81,
       "damage": 14,
       "radius": 0.44,
       "attackRange": 2.4,
@@ -615,8 +615,8 @@
       "mapHeight": 41,
       "roomTargetMin": 5,
       "roomTargetMax": 6,
-      "enemyBudgetBase": 5,
-      "enemyBudgetPerDepth": 1.6,
+      "enemyBudgetBase": 7,
+      "enemyBudgetPerDepth": 2,
       "spawnTable": [
         {
           "enemyId": "ooze",
@@ -642,8 +642,8 @@
       "eliteChance": 0,
       "floorNameTemplates": [
         "The {adj} Approach",
-        "Pale Approach",
-        "The Approach of Emberhold"
+        "Sooty Approach",
+        "The Approach of Cindervault"
       ],
       "ambientTint": "rgb(26,32,48)",
       "musicScaleId": "minorPentatonic"
@@ -654,8 +654,8 @@
       "mapHeight": 44,
       "roomTargetMin": 5,
       "roomTargetMax": 7,
-      "enemyBudgetBase": 5.4,
-      "enemyBudgetPerDepth": 1.6,
+      "enemyBudgetBase": 7.4,
+      "enemyBudgetPerDepth": 2,
       "spawnTable": [
         {
           "enemyId": "spitter",
@@ -684,8 +684,8 @@
       "eliteChance": 0.12,
       "floorNameTemplates": [
         "The {adj} Vaults",
-        "Rusted Vaults",
-        "The Vaults of Emberhold"
+        "Molten Vaults",
+        "The Vaults of Cindervault"
       ],
       "ambientTint": "rgb(32,32,41)",
       "musicScaleId": "dorian"
@@ -696,8 +696,8 @@
       "mapHeight": 47,
       "roomTargetMin": 5,
       "roomTargetMax": 7,
-      "enemyBudgetBase": 5.8,
-      "enemyBudgetPerDepth": 1.6,
+      "enemyBudgetBase": 7.8,
+      "enemyBudgetPerDepth": 2,
       "spawnTable": [
         {
           "enemyId": "wisp",
@@ -723,9 +723,9 @@
       "questCount": 0,
       "eliteChance": 0.24,
       "floorNameTemplates": [
-        "The {adj} Galleries",
-        "Echoing Galleries",
-        "The Galleries of Emberhold"
+        "The {adj} Undercroft",
+        "Hollow Undercroft",
+        "The Undercroft of Cindervault"
       ],
       "ambientTint": "rgb(38,31,33)",
       "musicScaleId": "minorPentatonic"
@@ -736,8 +736,8 @@
       "mapHeight": 50,
       "roomTargetMin": 5,
       "roomTargetMax": 8,
-      "enemyBudgetBase": 6.2,
-      "enemyBudgetPerDepth": 1.6,
+      "enemyBudgetBase": 8.2,
+      "enemyBudgetPerDepth": 2,
       "spawnTable": [
         {
           "enemyId": "wisp",
@@ -757,61 +757,61 @@
         }
       ],
       "keyRequired": true,
-      "bossId": "hearthmother",
+      "bossId": "warden",
       "chestCount": 2,
       "hasShrine": true,
       "npcIds": [],
-      "questCount": 0,
+      "questCount": 1,
       "eliteChance": 0.35,
       "floorNameTemplates": [
         "The {adj} Halls",
-        "Smoldering Halls",
-        "The Halls of Emberhold"
+        "Flooded Halls",
+        "The Halls of Cindervault"
       ],
       "ambientTint": "rgb(44,31,26)",
       "musicScaleId": "phrygian"
     }
   ],
   "narrative": {
-    "worldName": "Emberhold",
-    "premise": "Beneath the ruined citadel of Emberhold, an old furnace-god smolders. Descend its depths, cull what the dark breeds, and reach the Ashen Court.",
+    "worldName": "Cindervault",
+    "premise": "Cindervault was built to contain a spark that never cooled. The wardens are gone. The doors are open. The heat is patient.",
     "floorAdjectives": [
-      "Hollow",
-      "Sunken",
-      "Cracked",
+      "Shivering",
+      "Ashen",
+      "Rootbound",
+      "Sooty",
       "Pale",
       "Silent",
-      "Rootbound",
-      "Rusted",
-      "Shivering",
-      "Broken",
+      "Molten",
+      "Nameless",
+      "Blackened",
+      "Hollow",
+      "Smoldering",
       "Echoing",
       "Flooded",
-      "Molten",
-      "Smoldering",
-      "Withered",
-      "Sooty",
-      "Ashen",
-      "Blackened",
-      "Nameless",
       "Warded",
-      "Forgotten"
+      "Broken",
+      "Sunken",
+      "Cracked",
+      "Rusted",
+      "Forgotten",
+      "Withered"
     ],
     "floorNouns": [
-      "Undercroft",
+      "Passage",
       "Approach",
       "Vaults",
-      "Galleries",
+      "Undercroft",
       "Halls",
       "Cisterns",
-      "Depths",
+      "Archives",
+      "Warrens",
+      "Foundry",
+      "Kilns",
       "Court",
       "Stairs",
-      "Kilns",
-      "Foundry",
-      "Passage",
-      "Archives",
-      "Warrens"
+      "Galleries",
+      "Depths"
     ],
     "itemPrefixes": {
       "common": [
@@ -832,21 +832,21 @@
       ]
     },
     "loreFragments": [
-      "The furnace was never meant to go cold.",
-      "Some doors remember being opened and resent it.",
-      "What you hear dripping is not water.",
-      "The wardens drew lots. The loser kept the last shift.",
+      "They sealed the stairs from below, not above.",
       "Maps lie at the fourth landing. Trust your feet instead.",
-      "They sealed the stairs from below, not above."
+      "The furnace was never meant to go cold.",
+      "What you hear dripping is not water.",
+      "Some doors remember being opened and resent it.",
+      "The wardens drew lots. The loser kept the last shift."
     ],
-    "victoryText": "The furnace breathes again. Dawn finds you climbing, singed but grinning.",
+    "victoryText": "The deep is quiet now — the good kind of quiet, for once.",
     "defeatText": "Your ember joins the others down here. Someone will find it."
   },
   "audio": {
     "masterVolume": 0.85,
     "sfxVolume": 0.9,
     "musicVolume": 0.32,
-    "musicTempoBpm": 93,
+    "musicTempoBpm": 101,
     "scales": {
       "minorPentatonic": [
         220,

@@ -2,9 +2,9 @@
 
 ## Executive Summary
 
-Built and shipped a **multi-agent autonomous game development studio** whose eleven agents take a creative brief through design, implementation, build, automated QA, an autonomous bug-fix loop, performance gates, and release — producing **"Cinder Foundry" v0.1.9**, a genuinely playable browser action-roguelite.
+Built and shipped a **multi-agent autonomous game development studio** whose eleven agents take a creative brief through design, implementation, build, automated QA, an autonomous bug-fix loop, performance gates, and release — producing **"Cinder Foundry" v0.1.13**, a genuinely playable browser action-roguelite.
 
-The system's defining property is that its quality claims are *verified, not asserted*: the same deterministic simulation core drives both the human client and QA bots, so every release has been played end-to-end by automated players under hundreds of invariant checks before the Director agent authorizes shipping. During this session the QA pipeline rejected real builds it caught breaking (save/restore divergence), the fix loop autonomously applied recorded data fixes, regression scenarios became permanent executable test pins, and a wide verification sweep finished at **88% bot-victory rate with 100% system coverage across 8 seeds and zero open issues**.
+The system's defining property is that its quality claims are *verified, not asserted*: the same deterministic simulation core drives both the human client and QA bots, so every release has been played end-to-end by automated players under hundreds of invariant checks before the Director agent authorizes shipping. During this session the QA pipeline rejected real builds it caught breaking (save/restore divergence), the fix loop autonomously applied recorded data fixes, regression scenarios became permanent executable test pins, and a wide verification sweep finished at **88% bot-victory rate with 100% system coverage across 8 seeds**, and the Director now adapts difficulty between sprints from recorded outcomes (multi-sprint memory). Human sessions are reproducible via downloaded input replays (`npm run replay:verify`).
 
 Repository: https://github.com/shubhraj5575/ai-game-studio
 
@@ -56,7 +56,7 @@ Eleven deterministic expert-system agents (Director, Designer, Narrative, System
 
 ## Testing
 
-47 vitest tests: engine units (RNG/procgen/save/sim-smoke), property suites (combat bounds, XP monotonicity, inventory conservation, 60-seed floor legality), studio fix-loop strategies, client-layer smoke under stubbed DOM/Canvas/WebAudio, plus generated regression pins. CI runs typecheck → tests → reproducible build → headless QA smoke on the shipped pack.
+58 vitest tests: engine units (RNG/procgen/save/sim-smoke), property suites (combat bounds, XP monotonicity, inventory conservation, 60-seed floor legality), studio fix-loop strategies, client-layer smoke under stubbed DOM/Canvas/WebAudio, plus generated regression pins. CI runs typecheck → tests → reproducible build → headless QA smoke on the shipped pack.
 
 ## Benchmarks / Performance
 
@@ -113,6 +113,9 @@ https://github.com/shubhraj5575/ai-game-studio (branch `main`, CI on push).
 | Engine (sim/procgen/AI/combat/save) | **COMPLETED** |
 | Browser game (all listed features) | **COMPLETED** |
 | Multi-agent studio pipeline (11 agents) | **COMPLETED** |
+| Sell economy loop (UI+bot+coverage+tests) | **COMPLETED** |
+| Replay capture/verification for human runs | **COMPLETED** |
+| Director multi-sprint memory | **COMPLETED** |
 | QA harness with reject authority | **COMPLETED** |
 | Autonomous fix loop + regression pins | **COMPLETED** |
 | Reproducible builds + perf budgets | **COMPLETED** |

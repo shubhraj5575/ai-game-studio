@@ -87,10 +87,25 @@ docs/           ARCHITECTURE, GDD (generated), releases, decisions…
 npm run studio       # full pipeline (add -- --loops 4 --seeds 6)
 npm run build:game   # reproducible bundle of engine+client+generated content
 npm run dev          # local server for dist/
-npm test             # vitest suites (unit/integration/regression/studio)
+npm test             # vitest suites (unit/integration/regression/studio/client)
 npm run qa           # headless QA against the shipped pack (CI gate)
+npm run qa:wide      # 8-seed deep sweep
+npm run bench        # performance benchmarks vs budgets
 npx tsc --noEmit     # typecheck
 ```
+
+## Reproducible player reports
+
+Pause / death / victory screens include **Download Run Log** — a frame-by-frame
+input recording of your session. Because the simulation is deterministic, any
+run can be re-simulated bit-exactly:
+
+```bash
+npm run replay:verify -- ember-depths-run-12345.json
+```
+
+A `FAILED` verdict plus blocker list is a complete bug report; a hash match
+proves the engine reproduces your session exactly.
 
 ## Documentation
 

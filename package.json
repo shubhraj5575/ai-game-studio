@@ -18,6 +18,7 @@
     "qa": "tsx tools/qa-smoke.ts",
     "qa:wide": "tsx tools/qa-verify.ts",
     "bench": "tsx tools/bench.ts",
+    "replay:verify": "tsx tools/replay-verify.ts",
     "lint": "tsc --noEmit"
   },
   "devDependencies": {

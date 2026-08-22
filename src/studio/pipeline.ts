@@ -300,6 +300,21 @@ export function runStudio(options: StudioOptions = {}): StudioRunResult {
     );
     metrics.exportText(join(runDir, "logs"));
 
+    // Persist pointer for the next sprint's Director memory.
+    try {
+      writeFileSync(
+        join(rootDir, "studio-output", "LATEST.json"),
+        JSON.stringify({
+          ok: result.ok,
+          version: result.version,
+          fixIterations: result.fixIterations,
+          victoryRate: board.latestQa?.aggregate.victoryRate,
+          runId,
+          atIso: new Date().toISOString(),
+        }, null, 2) + "\n",
+      );
+    } catch { /* never crash on bookkeeping */ }
+
     appendOvernightLog(rootDir, result, board);
     log.info(`RUN COMPLETE ok=${result.ok} v${result.version ?? "-"}`);
   } catch (err) {

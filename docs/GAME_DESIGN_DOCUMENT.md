@@ -1,6 +1,6 @@
-# Furnace Undercroft — Game Design Document
+# Slag Depths — Game Design Document
 
-> A top-down action roguelite (dungeon descent) where you descend 4 procedurally generated depths, fighting mysterious creatures, completing survivor quests, and carrying your ember to the bottom.
+> A top-down action roguelite (dungeon descent) where you descend 4 procedurally generated depths, fighting furious creatures, completing survivor quests, and carrying your ember to the bottom.
 
 ## Pillars
 
@@ -92,7 +92,7 @@ One-shot full heal plus autosave per shrine; manual save available from pause me
 ## Progression
 
 - Player growth: Levels every ~floor mid-run; +HP/+damage per level; gear carries runs.
-- Difficulty arc: 4 depths; budget 5+1.6/depth (steady escalation, meaningful resource pressure).
+- Difficulty arc: 4 depths; budget 7+2/depth (thin margins, deaths teach).
 - Economy: Potions are the sink; relics are the splurge; selling keeps bad luck runs alive.
 
 ## Win / Lose
@@ -113,7 +113,7 @@ One-shot full heal plus autosave per shrine; manual save available from pause me
 
 ## Generated Content Summary
 
-- **Title:** Furnace Undercroft
+- **Title:** Slag Depths
 - **Depths:** 4 (B1, B2, B3, B4☠)
 - **Enemies:** Cinder Ooze, Ash Imp, Vault Skitterer, Soot Spitter, Gloom Brute, Gloom Wisp, Kiln Hulk, The Ashen Warden, Hearth-Mother
 - **Items:** 14 across rarities
@@ -124,18 +124,18 @@ One-shot full heal plus autosave per shrine; manual save available from pause me
 
 | Knob | Value |
 |---|---|
-| Player HP | 32 |
+| Player HP | 27 |
 | Player damage | 6 |
 | XP curve | base 22, growth 1.138 |
-| Depth HP scale | +18%/depth |
-| Depth damage scale | +12%/depth |
+| Depth HP scale | +22%/depth |
+| Depth damage scale | +15%/depth |
 
 ### Floor plan
 
 | Depth | Size | Rooms | Budget | Key | Boss | Shrine | NPCs | Quests |
 |---|---|---|---|---|---|---|---|---|
-| B1 | 41×41 | 5–6 | 5.0+1.6/d | — | — | ✔ | 2 | 2 |
-| B2 | 44×44 | 5–7 | 5.4+1.6/d | ✔ | — | ✔ | 1 | 1 |
-| B3 | 47×47 | 5–7 | 5.8+1.6/d | ✔ | — | — | 0 | 0 |
-| B4 | 50×50 | 5–8 | 6.2+1.6/d | ✔ | hearthmother | ✔ | 0 | 0 |
+| B1 | 41×41 | 5–6 | 7.0+2/d | — | — | ✔ | 2 | 2 |
+| B2 | 44×44 | 5–7 | 7.4+2/d | ✔ | — | ✔ | 1 | 1 |
+| B3 | 47×47 | 5–7 | 7.8+2/d | ✔ | — | — | 0 | 0 |
+| B4 | 50×50 | 5–8 | 8.2+2/d | ✔ | warden | ✔ | 0 | 1 |
 

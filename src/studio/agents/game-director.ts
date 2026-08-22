@@ -20,6 +20,13 @@ const PILLAR_SETS = [
   ["Meaningful choices", "Fair randomness", "Escalating descent"],
 ];
 
+export interface PriorRunSummary {
+  ok: boolean;
+  version: string | null;
+  victoryRate?: number;
+  fixIterations?: number;
+}
+
 export class GameDirectorAgent extends Agent {
 readonly id = "director";
   readonly title = "Game Director";
@@ -27,12 +34,33 @@ readonly id = "director";
   brief(seedBase: number): CreativeBrief {
     const rng = this.ctx.rng;
     const tone = rng.pick(TONES);
+    const prior = this.readPriorRun();
+
+    // Multi-sprint memory: a struggling prior run eases intent; a dominant
+    // one tightens it. Otherwise seeded variety decides.
+    let difficultyIntent: CreativeBrief["difficultyIntent"] = "standard";
+    let memoryNote = "no prior run found";
+    if (prior && prior.victoryRate !== undefined) {
+      const v = prior.victoryRate;
+      if (v < 0.6 && !prior.ok) {
+        difficultyIntent = "welcoming";
+        memoryNote = `prior run v${prior.version} struggled (victory ${Math.round(v * 100)}%) → easing`;
+      } else if (v >= 0.95) {
+        difficultyIntent = "punishing";
+        memoryNote = `prior run v${prior.version} dominated (victory ${Math.round(v * 100)}%) → hardening`;
+      } else {
+        difficultyIntent = "standard";
+        memoryNote = `prior run v${prior.version}: victory ${Math.round(v * 100)}% → hold course`;
+      }
+      this.act("memory.recalled", memoryNote);
+    }
+
     const brief: CreativeBrief = {
       workingTitleSeedWord: rng.pick(["Ember", "Ashfall", "Cinder", "Furnace", "Gloam", "Slag"]),
       genre: "top-down action roguelite (dungeon descent)",
       pillars: rng.pick(PILLAR_SETS),
       targetDepthCount: 4,
-      difficultyIntent: "standard",
+      difficultyIntent,
       toneWords: [...tone],
       mustHaveSystems: [
         "player controls + game loop",
@@ -52,11 +80,30 @@ readonly id = "director";
     };
     void seedBase;
     this.act("brief.set", `"${brief.workingTitleSeedWord}" — ${brief.toneWords.join(" ")}`);
-    this.artifactJson("director/brief.json", brief);
+    this.artifactJson("director/brief.json", { ...brief, memoryNote });
     this.ctx.board.brief = brief;
 
     studioBusEmitDecision(this.ctx.board, `brief approved: ${brief.workingTitleSeedWord} depths=${brief.targetDepthCount}`, "vision set");
     return brief;
+  }
+
+  /** Look for the most recent run summary to inform this sprint. */
+  private readPriorRun(): PriorRunSummary | null {
+    try {
+      const { readFileSync, existsSync } = nodeFs;
+      const latestPath = joinPath(this.ctx.runDir, "..", "..", "studio-output", "LATEST.json");
+      if (!existsSync(latestPath)) return null;
+      const raw = JSON.parse(readFileSync(latestPath, "utf8")) as PriorRunSummary;
+      return {
+        ok: raw.ok,
+        version: raw.version,
+        fixIterations: raw.fixIterations,
+        victoryRate: raw.victoryRate,
+      };
+    } catch (err) {
+      this.log.warn("memory.readFailed", { error: err instanceof Error ? err.message : String(err) });
+      return null;
+    }
   }
 
   /** Phase: REVIEW — gate the GDD before integration. */
@@ -155,4 +202,11 @@ import type { Blackboard } from "../core/blackboard.js";
 type BB = Pick<Blackboard, "directorApproval"> & Partial<Blackboard>;
 function studioBusEmitDecision(_board: BB | { directorApproval: null }, decision: string, context: string): void {
   studioBus.emit("directorDecision", { decision: `${context}: ${decision}`, rationale: "" });
+}
+
+import { readFileSync as _rf, existsSync as _es } from "node:fs";
+import { join as _join } from "node:path";
+const nodeFs = { readFileSync: _rf, existsSync: _es };
+function joinPath(...parts: string[]): string {
+  return _join(...parts);
 }

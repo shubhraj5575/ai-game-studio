@@ -8,6 +8,7 @@ import type { FrameInput } from "../engine/sim/simulation.js";
 import { emptyInput } from "../engine/sim/simulation.js";
 import { snapshot, restoreFromSnapshot } from "../engine/sim/save.js";
 import { gameBus } from "../engine/sim/game-events.js";
+import { ReplayRecorder } from "../qa/replay.js";
 import { AudioSystem } from "./audio.js";
 import { Renderer, toast } from "./render.js";
 import { UI } from "./ui.js";
@@ -78,6 +79,8 @@ function boot(): void {
   let lastTime = 0;
   let rafId = 0;
   let dialogueRefreshNeeded = false;
+  let recorder: ReplayRecorder | null = null;
+  let recordedFrames = 0;
 
   const currentFloorScale = (): string =>
     sim?.pack.floors.find((f) => f.depth === sim!.state.depth)?.musicScaleId ?? "minorPentatonic";
@@ -203,6 +206,8 @@ function boot(): void {
       })();
 
     sim = new Simulation(pack, chosenSeed);
+    recorder = new ReplayRecorder(chosenSeed);
+    recordedFrames = 0;
     beginPlay();
   };
 
@@ -211,6 +216,9 @@ function boot(): void {
     if (!raw) return;
     try {
       sim = restoreFromSnapshot(pack, raw);
+      // Restores can't reproduce pre-save frames; record from here on.
+      recorder = new ReplayRecorder(sim.state.seed);
+      recordedFrames = 0;
       beginPlay();
     } catch (err) {
       toast(`Save incompatible: ${(err as Error).message.split("\n")[0]?.slice(0, 80)}`);
@@ -299,6 +307,25 @@ function boot(): void {
     }
   });
 
+  const downloadReplay = (): void => {
+    if (!sim || !recorder) return;
+    const data = recorder.serialize(sim.pack.meta.version);
+    // Attach the live final hash so verification proves bit-exactness.
+    void import("../engine/debug/state-hash.js").then(({ stateHash }) => {
+      data.finalHash = stateHash(sim!);
+      const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `ember-depths-run-${data.seed}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast(`Run log saved (${recordedFrames} frames)`);
+    });
+  };
+  for (const id of ["btnReplayLog", "btnDeathReplay", "btnVictoryReplay"]) {
+    document.getElementById(id)?.addEventListener("click", () => downloadReplay());
+  }
+
   ui.onItemClick = (s, def, equipped) => {
     if (equipped) {
       toast(`${def.name}: unequipping not needed — swap by equipping another`);
@@ -344,7 +371,9 @@ function boot(): void {
         sim.step(input);
       } else {
         renderer.capturePreStep(sim);
-        sim.step(readInput());
+        const input = readInput();
+        recorder?.capture(recordedFrames++, input);
+        sim.step(input);
       }
       accumulator -= FIXED_DT;
       steps++;

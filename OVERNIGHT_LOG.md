@@ -81,3 +81,41 @@ docs/SECURITY.md.
 - Outcome: **released** at v0.1.10
 - QA: PASS · Perf: PASS · fix iterations: 0 · engine issues: 0
 - Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/2026-08-22T20-39-09/artifacts
+
+## Studio run — 2026-08-22T20:45:16.796Z
+
+- Outcome: **released** at v0.1.11
+- QA: PASS · Perf: PASS · fix iterations: 0 · engine issues: 0
+- Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/2026-08-22T20-45-12/artifacts
+
+## Studio run — 2026-08-22T20:45:50.057Z
+
+- Outcome: **released** at v0.1.12
+- QA: PASS · Perf: PASS · fix iterations: 0 · engine issues: 0
+- Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/2026-08-22T20-45-47/artifacts
+
+## Studio run — 2026-08-22T20:50:24.884Z
+
+- Outcome: **released** at v0.1.13
+- QA: PASS · Perf: PASS · fix iterations: 0 · engine issues: 0
+- Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/2026-08-22T20-50-22/artifacts
+
+## Milestone 6 — Closing self-review gaps
+Post-release critique found three real gaps; all closed:
+1. **Sell economy was unreachable** — API existed, no UI/bot/coverage.
+   Added shop sell section, bot junk-selling, sold-event coverage flag,
+   price/refusal tests.
+2. **Human sessions weren't verifiable** — added ReplayRecorder in client
+   (Download Run Log), bit-exact verifier CLI, round-trip tests including
+   tamper detection. Caught & fixed my own lossy input rounding that broke
+   exactness, and an architecture violation (node:fs imported into browser
+   bundle via QA module) surfaced immediately by the reproducible build.
+3. **Studio had no cross-run learning** — Director now reads the previous
+   sprint's outcome (studio-output/LATEST.json): dominant runs harden
+   difficulty, struggling ones ease it. Pinned by 5 tests including corrupt-
+   history resilience.
+
+Also fixed mid-debugging: readPriorRun returned an object missing the very
+field its caller checked (probe logs showed vr=1 while behavior said
+undefined) — a reminder that instrumentation must observe the same values
+the code uses.
