@@ -39,6 +39,9 @@ export const SAVE_VERSION = 3;
 export interface FrameInput {
   moveX: number;
   moveY: number;
+  /** Optional aim override (unit or arbitrary vector); facing follows it when present. */
+  aimX?: number;
+  aimY?: number;
   attackHeld: boolean;
   dodgePressed: boolean;
   interactPressed: boolean;
@@ -145,6 +148,12 @@ export class Simulation {
     s.map = generated.map;
     s.entities.clear();
     s.nextEntityId = 1;
+    // Abandon unfinished quests from previous floors explicitly.
+    for (const q of s.quests) {
+      if (q.status === "offered" || q.status === "active" || q.status === "readyTurnIn") {
+        logEvent(s, "questExpired", `${q.title} (left behind on depth ${q.depth})`);
+      }
+    }
     s.quests.length = 0;
     s.visitedRoomIds.length = 0;
     s.shopStocks = {};
@@ -339,7 +348,15 @@ export class Simulation {
     const moving = moveX !== 0 || moveY !== 0;
     const dir = moving ? vnorm({ x: moveX, y: moveY }) : { x: 0, y: 0 };
 
-    if (moving) p.facing = Math.atan2(dir.y, dir.x);
+    // Aim: explicit aim vector wins; otherwise face movement direction.
+    const hasAim =
+      input.aimX !== undefined && input.aimY !== undefined &&
+      (input.aimX !== 0 || input.aimY !== 0);
+    if (hasAim) {
+      p.facing = Math.atan2(input.aimY!, input.aimX!);
+    } else if (moving) {
+      p.facing = Math.atan2(dir.y, dir.x);
+    }
 
     // Dodge.
     const dodging = pt.dodgeTimeLeft > 0;
@@ -818,9 +835,49 @@ export class Simulation {
     const q = this.state.quests.find((x) => x.id === questId && x.status === "offered");
     if (!q) return false;
     q.status = "active";
+    this.spawnCollectQuestGuarantees(q);
     gameBus.emit("questAccepted", { questId: q.templateId, title: q.title });
     logEvent(this.state, "questAccept", q.title);
     return true;
+  }
+
+  /**
+   * Collect objectives are guaranteed completable: accepting the quest spawns
+   * the deficit of target items in reachable spots across the floor.
+   * (Pickup progress is lifetime-based, so these directly complete it.)
+   */
+  private spawnCollectQuestGuarantees(q: QuestInstance): void {
+    const s = this.state;
+    for (const o of q.objectives) {
+      if (o.kind !== "collect") continue;
+      const deficit = o.needed - o.progress;
+      const itemDefFound = this.pack.items.find((i) => i.id === o.targetRef);
+      if (!itemDefFound || deficit <= 0) continue;
+
+      // Candidate tiles: room-interior walkable tiles away from player.
+      const player = s.entities.get(s.playerId);
+      const candidates: Vec2[] = [];
+      for (const room of s.map.rooms) {
+        for (let t = 0; t < 6; t++) {
+          const x = room.x + 1 + Math.floor(this.rngMisc.next() * Math.max(1, room.w - 2));
+          const y = room.y + 1 + Math.floor(this.rngMisc.next() * Math.max(1, room.h - 2));
+          if (!s.map.isWalkable(x, y)) continue;
+          const p = { x: x + 0.5, y: y + 0.5 };
+          if (player && vdist(p, player.pos) < 8) continue;
+          candidates.push(p);
+        }
+      }
+      this.rngMisc.shuffle(candidates);
+      for (let i = 0; i < deficit && candidates.length > 0; i++) {
+        const pos = candidates.pop()!;
+        const drop = makeEntity(s, "itemDrop", pos, 0.26);
+        drop.itemId = o.targetRef;
+        drop.quantity = 1;
+        drop.ttl = Infinity;
+        drop.color = "#ffd700"; // quest glint
+        logEvent(s, "questItemSpawned", `${o.targetRef} at (${pos.x.toFixed(1)},${pos.y.toFixed(1)})`);
+      }
+    }
   }
 
   turnInQuestById(questId: string): boolean {

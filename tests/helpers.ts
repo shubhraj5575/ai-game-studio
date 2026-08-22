@@ -1,25 +1,9 @@
 /** Shared test helpers. */
-import { fnv1a } from "../src/engine/core/hash.js";
-import type { Simulation } from "../src/engine/sim/simulation.js";
 import type { FrameInput } from "../src/engine/sim/simulation.js";
 import { emptyInput } from "../src/engine/sim/simulation.js";
-import { snapshot } from "../src/engine/sim/save.js";
 import { Rng } from "../src/engine/core/rng.js";
 
-/** Deterministic state fingerprint (uses the save serializer's canonical form). */
-export function stateHash(sim: Simulation): string {
-  const env = JSON.parse(snapshot(sim)) as { data: unknown };
-  return fnv1a(stableStringify(env.data));
-}
-
-/** Deterministic JSON stringify with sorted object keys. */
-export function stableStringify(value: unknown): string {
-  if (value === null || typeof value !== "object") return JSON.stringify(value) ?? "null";
-  if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
-  const entries = Object.entries(value as Record<string, unknown>).filter(([, v]) => v !== undefined);
-  entries.sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
-  return `{${entries.map(([k, v]) => `${JSON.stringify(k)}:${stableStringify(v)}`).join(",")}}`;
-}
+export { stateHash, stableStringify } from "../src/engine/debug/state-hash.js";
 
 /**
  * Scripted bot input generator: deterministic per seed.

@@ -2,6 +2,7 @@
 import type { SimState } from "./state.js";
 import type { ContentPack, XpCurveDef } from "../content/types.js";
 import { itemDef, relicEffects } from "./inventory.js";
+import { gameBus } from "./game-events.js";
 
 export interface PlayerStats {
   maxHp: number;
@@ -68,6 +69,7 @@ export function grantXp(state: SimState, pack: ContentPack, amount: number): num
       // Level-up heals a third of max — feels good, keeps runs moving.
       player.hp = Math.min(stats.maxHp, player.hp + Math.round(stats.maxHp / 3));
     }
+    gameBus.emit("levelUp", { level: state.level });
   }
   return levelsGained;
 }

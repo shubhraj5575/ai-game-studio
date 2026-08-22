@@ -222,17 +222,22 @@ function generateOnce(pack: ContentPack, cfg: FloorConfig, seed: number, attempt
     boss = { pos: bp, enemyId: cfg.bossId };
   }
 
-  // NPCs in early/mid rooms.
+  // NPCs in early/mid rooms. Quest templates are dealt from one shared,
+  // shuffled pool so two NPCs never duplicate the same quest on a floor.
   const npcs: FloorSpawns["npcs"] = [];
   {
+    const questPool = rng.shuffle([...pack.questTemplates.map((q) => q.id)]);
+    let poolIdx = 0;
     const npcRooms = shuffleCopy(rng, rooms.filter((r) => r !== startRoom && r !== farthestRoom));
     for (let i = 0; i < cfg.npcIds.length; i++) {
       const r = npcRooms[i % Math.max(npcRooms.length, 1)] ?? midRoom;
       const p = randomTileInRoom(map, r, rng, startCenter, 6);
       if (p) {
-        const questIds = pack.questTemplates.length > 0
-          ? sampleDistinct(rng, pack.questTemplates.map((q) => q.id), Math.min(cfg.questCount, pack.questTemplates.length))
-          : [];
+        const questIds: string[] = [];
+        for (let qn = 0; qn < cfg.questCount && pack.questTemplates.length > 0; qn++) {
+          questIds.push(questPool[poolIdx % questPool.length]!);
+          poolIdx++;
+        }
         npcs.push({ pos: p, npcDefId: cfg.npcIds[i]!, questIds });
       }
     }
@@ -381,10 +386,6 @@ function pickLootTable(pack: ContentPack, _depth: number, _rng: Rng): string {
   // One shared table id convention authored by the Systems Designer agent.
   const ids = pack.lootTables.map((t) => t.id);
   return ids.includes("chest-default") ? "chest-default" : ids[0] ?? "chest-default";
-}
-
-function sampleDistinct<T>(rng: Rng, arr: T[], n: number): T[] {
-  return rng.shuffle([...arr]).slice(0, n);
 }
 
 function shuffleCopy<T>(rng: Rng, arr: readonly T[]): T[] {

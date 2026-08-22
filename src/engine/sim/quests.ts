@@ -2,7 +2,6 @@
 import { Rng } from "../core/rng.js";
 import type { ContentPack, QuestTemplate } from "../content/types.js";
 import type { QuestInstance, SimState } from "./state.js";
-import { countItem, removeItem } from "./inventory.js";
 import { grantXp } from "./progression.js";
 import type { Simulation } from "./simulation.js";
 
@@ -37,10 +36,12 @@ function instantiateQuest(
   let objectives: QuestInstance["objectives"];
   switch (tpl.kind) {
     case "slay": {
-      // Target an enemy that actually spawns on this depth.
+      // Target one of the two most plentiful enemies on this depth so
+      // objectives stay completable in practice.
       const cfg = pack.floors.find((f) => f.depth === depth);
       if (!cfg || cfg.spawnTable.length === 0) return null;
-      const target = rng.pick(cfg.spawnTable).enemyId;
+      const sorted = [...cfg.spawnTable].sort((a, b) => b.weight - a.weight);
+      const target = sorted[rng.intInclusive(0, Math.min(1, sorted.length - 1))]!.enemyId;
       objectives = [{ kind: "slay", targetRef: target, needed: count, progress: 0 }];
       break;
     }
@@ -57,10 +58,19 @@ function instantiateQuest(
       return null;
   }
 
+  const enemyName = (ref: string): string => {
+    const def = pack.enemies.find((e) => e.id === ref);
+    return def ? def.name : ref;
+  };
+
   return {
     id: `${tpl.id}-d${depth}-n${giverId}`,
     templateId: tpl.id,
-    title: rng.pick(tpl.titles).replace("{count}", String(count)),
+    title: rng
+      .pick(tpl.titles)
+      .replace("{count}", String(count))
+      .replace("{enemy}", enemyName(objectives[0]?.kind === "slay" ? objectives[0]!.targetRef : ""))
+      .replace("{adj}", pack.narrative.floorAdjectives[0] ?? "Deep"),
     giverEntityId: giverId,
     depth,
     objectives,
@@ -91,9 +101,10 @@ export function onItemPickedUp(sim: Simulation, itemId: string): void {
   for (const q of sim.state.quests) {
     if (q.status !== "active") continue;
     for (const o of q.objectives) {
-      if (o.kind === "collect" && o.targetRef === itemId) {
-        // Progress reflects actual held quantity (handles drops/loss).
-        o.progress = Math.min(o.needed, countItem(sim.state, itemId));
+      // Collect objectives count lifetime acquisitions — consuming items
+      // later (potions!) must never un-complete a quest.
+      if (o.kind === "collect" && o.targetRef === itemId && o.progress < o.needed) {
+        o.progress++;
         checkReady(sim, q);
       }
     }
@@ -121,20 +132,14 @@ function checkReady(sim: Simulation, q: QuestInstance): void {
 }
 
 /**
- * Turn in a ready quest: consumes collect targets, grants rewards.
+ * Turn in a ready quest: grants rewards. Collect objectives are evidence-
+ * based (lifetime acquisitions), so no items are consumed.
  * Returns null on failure, else a summary string.
  */
 export function turnInQuest(sim: Simulation, questId: string): string | null {
   const state = sim.state;
   const q = state.quests.find((x) => x.id === questId && x.status === "readyTurnIn");
   if (!q) return null;
-
-  // Consume collected items.
-  for (const o of q.objectives) {
-    if (o.kind === "collect") {
-      if (!removeItem(state, o.targetRef, o.needed)) return null;
-    }
-  }
 
   state.gold += q.rewardGold;
   state.stats.goldEarned += q.rewardGold;

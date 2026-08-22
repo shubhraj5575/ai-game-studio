@@ -180,14 +180,14 @@ export function makeTestPack(): ContentPack {
       {
         id: "slay-oozes",
         kind: "slay",
-        titles: ["Thin Their Numbers", "{count} Fewer Oozes"],
+        titles: ["Thin Their Numbers", "{count} Fewer {enemy}s"],
         targetCountMin: 3,
         targetCountMax: 5,
         rewardGoldMin: 18,
         rewardGoldMax: 34,
         rewardXpMin: 20,
         rewardXpMax: 36,
-        offerTexts: ["The oozes gnaw at the support beams. Thin them out."],
+        offerTexts: ["The depths breed too many of them. Thin their numbers."],
         completeTexts: ["The beams will hold another night. Take this."],
       },
       {
