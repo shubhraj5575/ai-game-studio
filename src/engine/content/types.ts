@@ -203,6 +203,8 @@ export interface ContentPackMeta {
   title: string;
   tagline: string;
   version: string;
+  /** Auto-fix patch counter incremented by the Programmer agent. */
+  patch?: number;
   seedBase: number;
   generator: string;
   createdAtIso: string;

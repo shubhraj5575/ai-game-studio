@@ -46,6 +46,7 @@ interface SerializedState {
   dialogue: SimState["dialogue"];
   keyCollected: boolean;
   exitUnlocked: boolean;
+  floorDecor: { torches: Array<{ x: number; y: number }> };
   visitedRoomIds: number[];
   shopStocks: Record<string, string[]>;
   lastDamageSource: string;
@@ -110,9 +111,12 @@ export function snapshot(sim: Simulation): string {
     inventory: s.inventory,
     equipment: s.equipment,
     quests: s.quests,
-    dialogue: null, // never serialize an open dialogue
+    // Dialogue is plain data; serialize it so a save taken mid-conversation
+    // restores identically (hash equality matters for replay verification).
+    dialogue: s.dialogue,
     keyCollected: s.keyCollected,
     exitUnlocked: s.exitUnlocked,
+    floorDecor: { torches: s.floorDecor.torches.map((t) => ({ x: t.x, y: t.y })) },
     visitedRoomIds: s.visitedRoomIds,
     shopStocks: s.shopStocks,
     lastDamageSource: s.lastDamageSource,
@@ -211,9 +215,12 @@ export function restoreFromSnapshot(pack: ContentPack, json: string): Simulation
     inventory: d.inventory,
     equipment: d.equipment,
     quests: d.quests,
-    dialogue: null,
+    dialogue: d.dialogue,
     keyCollected: d.keyCollected,
     exitUnlocked: d.exitUnlocked,
+    floorDecor: {
+      torches: (d.floorDecor?.torches ?? []).map((t) => ({ x: t.x, y: t.y })),
+    },
     visitedRoomIds: d.visitedRoomIds,
     shopStocks: d.shopStocks,
     lastDamageSource: d.lastDamageSource,

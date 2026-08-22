@@ -106,6 +106,7 @@ export class Simulation {
       dialogue: null,
       keyCollected: false,
       exitUnlocked: false,
+      floorDecor: { torches: [] },
       visitedRoomIds: [],
       shopStocks: {},
       lastDamageSource: "",
@@ -161,6 +162,7 @@ export class Simulation {
     this.currentRoomId = null;
 
     const sp = generated.spawns;
+    s.floorDecor = { torches: sp.torches.map((t) => ({ x: t.x, y: t.y })) };
 
     // Player persists across floors; recreate entity each floor.
     const player = makeEntity(s, "player", sp.playerStart, 0.36);

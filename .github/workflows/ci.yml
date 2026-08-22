@@ -22,6 +22,6 @@ jobs:
       - name: Unit + integration + regression tests
         run: npx vitest run --reporter=dot
       - name: Build game bundle
-        run: npm run build:game
-      - name: Headless QA smoke (3 seeds)
-        run: node tools/qa-smoke.mjs
+        run: npx tsx tools/build-game.ts
+      - name: Headless QA smoke (shipped pack, 2 seeds)
+        run: npx tsx tools/qa-smoke.ts

@@ -1,0 +1,964 @@
+{
+  "meta": {
+    "title": "Cinder Foundry",
+    "tagline": "Cindervault was built to contain a spark that never cooled.",
+    "version": "0.1.5",
+    "patch": 0,
+    "seedBase": 1423253951,
+    "generator": "ai-game-studio",
+    "createdAtIso": "2026-08-22T19:22:32.412Z"
+  },
+  "palette": {
+    "background": "#091011",
+    "wallTop": "#283b3e",
+    "wallFace": "#172326",
+    "floorA": "#202b2f",
+    "floorB": "#1b2427",
+    "accent": "#f547b0",
+    "danger": "#ef4539",
+    "friendly": "#63e977",
+    "gold": "#ffd700",
+    "uiPanel": "#141824ee",
+    "uiText": "#e8e6df"
+  },
+  "systems": {
+    "player": {
+      "baseSpeed": 4.4,
+      "baseMaxHp": 32,
+      "baseDamage": 6,
+      "baseDefense": 0,
+      "attackRange": 1.55,
+      "attackArcDeg": 100,
+      "attackCooldownSec": 0.42,
+      "dodgeSpeedMult": 3.1,
+      "dodgeDurationSec": 0.28,
+      "dodgeCooldownSec": 0.45,
+      "staminaMax": 100,
+      "staminaRegenPerSec": 34,
+      "dodgeStaminaCost": 28,
+      "iframesAfterHitSec": 0.55,
+      "pickupRadius": 0.8,
+      "interactRadius": 1.15,
+      "critChance": 0.06,
+      "critMultiplier": 1.9,
+      "knockbackForce": 7,
+      "damageVariancePct": 12,
+      "hpPerLevel": 5,
+      "damagePerLevel": 1.5
+    },
+    "xpCurve": {
+      "base": 22,
+      "growth": 1.138
+    },
+    "startingGold": 25,
+    "potionPrice": 10,
+    "priceVariancePct": 20,
+    "depthHpScale": 0.184,
+    "depthDamageScale": 0.12
+  },
+  "enemies": [
+    {
+      "id": "ooze",
+      "name": "Cinder Ooze",
+      "minDepth": 1,
+      "hp": 12,
+      "speed": 2.24,
+      "damage": 4,
+      "radius": 0.34,
+      "attackRange": 0.9,
+      "attackCooldownSec": 1.15,
+      "perceptionRadius": 7.5,
+      "hearingRadius": 5.5,
+      "behavior": "melee",
+      "xpReward": 7,
+      "goldDropMin": 1,
+      "goldDropMax": 6,
+      "color": "#e03e91",
+      "shape": "blob"
+    },
+    {
+      "id": "imp",
+      "name": "Ash Imp",
+      "minDepth": 1,
+      "hp": 9,
+      "speed": 2.8,
+      "damage": 4,
+      "radius": 0.3,
+      "attackRange": 6,
+      "attackCooldownSec": 1.6,
+      "perceptionRadius": 8.5,
+      "hearingRadius": 5.5,
+      "behavior": "ranged",
+      "projectileSpeed": 7.5,
+      "xpReward": 7,
+      "goldDropMin": 1,
+      "goldDropMax": 6,
+      "color": "#d83ee0",
+      "shape": "imp"
+    },
+    {
+      "id": "skitter",
+      "name": "Vault Skitterer",
+      "minDepth": 1,
+      "hp": 12,
+      "speed": 2.14,
+      "damage": 4,
+      "radius": 0.34,
+      "attackRange": 0.9,
+      "attackCooldownSec": 1.15,
+      "perceptionRadius": 7.5,
+      "hearingRadius": 5.5,
+      "behavior": "melee",
+      "xpReward": 7,
+      "goldDropMin": 1,
+      "goldDropMax": 6,
+      "color": "#3ee09f",
+      "shape": "blob"
+    },
+    {
+      "id": "spitter",
+      "name": "Soot Spitter",
+      "minDepth": 2,
+      "hp": 15,
+      "speed": 2.76,
+      "damage": 5,
+      "radius": 0.3,
+      "attackRange": 6,
+      "attackCooldownSec": 1.6,
+      "perceptionRadius": 8.5,
+      "hearingRadius": 5.5,
+      "behavior": "ranged",
+      "projectileSpeed": 7.5,
+      "xpReward": 9,
+      "goldDropMin": 1,
+      "goldDropMax": 7,
+      "color": "#5ce03e",
+      "shape": "imp"
+    },
+    {
+      "id": "brute",
+      "name": "Gloom Brute",
+      "minDepth": 2,
+      "hp": 15,
+      "speed": 1.71,
+      "damage": 11,
+      "radius": 0.44,
+      "attackRange": 2.4,
+      "attackCooldownSec": 1.8,
+      "perceptionRadius": 7.5,
+      "hearingRadius": 5.5,
+      "behavior": "charger",
+      "xpReward": 9,
+      "goldDropMin": 1,
+      "goldDropMax": 7,
+      "color": "#c23ee0",
+      "shape": "brute"
+    },
+    {
+      "id": "wisp",
+      "name": "Gloom Wisp",
+      "minDepth": 3,
+      "hp": 17,
+      "speed": 2.71,
+      "damage": 7,
+      "radius": 0.3,
+      "attackRange": 6,
+      "attackCooldownSec": 1.6,
+      "perceptionRadius": 8.5,
+      "hearingRadius": 5.5,
+      "behavior": "ranged",
+      "projectileSpeed": 7.5,
+      "xpReward": 12,
+      "goldDropMin": 2,
+      "goldDropMax": 9,
+      "color": "#3e77e0",
+      "shape": "wraith"
+    },
+    {
+      "id": "hulk",
+      "name": "Kiln Hulk",
+      "minDepth": 3,
+      "hp": 19,
+      "speed": 1.75,
+      "damage": 14,
+      "radius": 0.44,
+      "attackRange": 2.4,
+      "attackCooldownSec": 1.8,
+      "perceptionRadius": 7.5,
+      "hearingRadius": 5.5,
+      "behavior": "charger",
+      "xpReward": 12,
+      "goldDropMin": 2,
+      "goldDropMax": 9,
+      "color": "#e0663e",
+      "shape": "brute"
+    },
+    {
+      "id": "warden",
+      "name": "The Ashen Warden",
+      "minDepth": 90,
+      "hp": 95,
+      "speed": 2.4,
+      "damage": 10,
+      "radius": 0.52,
+      "attackRange": 1.9,
+      "attackCooldownSec": 1.05,
+      "perceptionRadius": 10,
+      "hearingRadius": 8,
+      "behavior": "charger",
+      "xpReward": 70,
+      "goldDropMin": 30,
+      "goldDropMax": 65,
+      "color": "#cde03e",
+      "shape": "wraith"
+    },
+    {
+      "id": "hearthmother",
+      "name": "Hearth-Mother",
+      "minDepth": 90,
+      "hp": 95,
+      "speed": 2.4,
+      "damage": 10,
+      "radius": 0.52,
+      "attackRange": 1.9,
+      "attackCooldownSec": 1.05,
+      "perceptionRadius": 10,
+      "hearingRadius": 8,
+      "behavior": "charger",
+      "xpReward": 70,
+      "goldDropMin": 30,
+      "goldDropMax": 65,
+      "color": "hsl(350, 72%, 56%)",
+      "shape": "brute"
+    }
+  ],
+  "items": [
+    {
+      "id": "weapon-rusty-shortsword",
+      "name": "Rusty Shortsword",
+      "kind": "weapon",
+      "rarity": "common",
+      "value": 14,
+      "stackable": false,
+      "description": "Chipped but eager.",
+      "power": 3,
+      "attackSpeed": 0.38
+    },
+    {
+      "id": "weapon-watch-blade",
+      "name": "Watch Blade",
+      "kind": "weapon",
+      "rarity": "uncommon",
+      "value": 46,
+      "stackable": false,
+      "description": "Standard issue for the deep watch.",
+      "power": 6,
+      "attackSpeed": 0.38
+    },
+    {
+      "id": "weapon-ember-fang",
+      "name": "Ember Fang",
+      "kind": "weapon",
+      "rarity": "rare",
+      "value": 92,
+      "stackable": false,
+      "description": "Warm to the touch, warmer when swung.",
+      "power": 9,
+      "attackSpeed": 0.38
+    },
+    {
+      "id": "weapon-furnace-maul",
+      "name": "Furnace Maul",
+      "kind": "weapon",
+      "rarity": "epic",
+      "value": 150,
+      "stackable": false,
+      "description": "Slow as a verdict, final as one.",
+      "power": 13,
+      "attackSpeed": 0.62
+    },
+    {
+      "id": "armor-leather-jerkin",
+      "name": "Leather Jerkin",
+      "kind": "armor",
+      "rarity": "common",
+      "value": 20,
+      "stackable": false,
+      "description": "Better than nothing. Barely.",
+      "defense": 1
+    },
+    {
+      "id": "armor-watch-plate",
+      "name": "Watch Plate",
+      "kind": "armor",
+      "rarity": "uncommon",
+      "value": 58,
+      "stackable": false,
+      "description": "Heavy, reassuring.",
+      "defense": 3
+    },
+    {
+      "id": "armor-warden-shell",
+      "name": "Warden Shell",
+      "kind": "armor",
+      "rarity": "rare",
+      "value": 110,
+      "stackable": false,
+      "description": "Salvaged from something that used to wear it proudly.",
+      "defense": 5
+    },
+    {
+      "id": "potion-small",
+      "name": "Minor Ember Draught",
+      "kind": "potion",
+      "rarity": "common",
+      "value": 12,
+      "stackable": true,
+      "description": "Restores health with a pleasant warmth.",
+      "healAmount": 18
+    },
+    {
+      "id": "potion-large",
+      "name": "Greater Ember Draught",
+      "kind": "potion",
+      "rarity": "uncommon",
+      "value": 26,
+      "stackable": true,
+      "description": "Restores a lot of health, less politely.",
+      "healAmount": 42
+    },
+    {
+      "id": "relic-heart-of-ash",
+      "name": "Heart of Ash",
+      "kind": "relic",
+      "rarity": "epic",
+      "value": 130,
+      "stackable": false,
+      "description": "+max HP. It beats when you are quiet.",
+      "relicEffect": {
+        "kind": "maxHp",
+        "amount": 12
+      }
+    },
+    {
+      "id": "relic-hawkeye-charm",
+      "name": "Hawkeye Charm",
+      "kind": "relic",
+      "rarity": "rare",
+      "value": 95,
+      "stackable": false,
+      "description": "+critical chance. The dark has eyes; now so do you.",
+      "relicEffect": {
+        "kind": "critChance",
+        "amount": 0.08
+      }
+    },
+    {
+      "id": "relic-swiftstep-sigil",
+      "name": "Swiftstep Sigil",
+      "kind": "relic",
+      "rarity": "uncommon",
+      "value": 70,
+      "stackable": false,
+      "description": "Move faster. Outpace your regrets.",
+      "relicEffect": {
+        "kind": "moveSpeedMult",
+        "mult": 1.12
+      }
+    },
+    {
+      "id": "relic-tollkeepers-mark",
+      "name": "Tollkeeper's Mark",
+      "kind": "relic",
+      "rarity": "uncommon",
+      "value": 65,
+      "stackable": false,
+      "description": "Gold comes easier. So does attention.",
+      "relicEffect": {
+        "kind": "goldGainMult",
+        "mult": 1.35
+      }
+    },
+    {
+      "id": "quest-ember-shard",
+      "name": "Ember Shard",
+      "kind": "quest",
+      "rarity": "rare",
+      "value": 30,
+      "stackable": true,
+      "description": "Still warm. Someone below wants these."
+    }
+  ],
+  "lootTables": [
+    {
+      "id": "chest-default",
+      "entries": [
+        {
+          "itemId": "weapon-rusty-shortsword",
+          "weight": 26
+        },
+        {
+          "itemId": "armor-leather-jerkin",
+          "weight": 26
+        },
+        {
+          "itemId": "potion-small",
+          "weight": 26
+        },
+        {
+          "itemId": "weapon-watch-blade",
+          "weight": 14
+        },
+        {
+          "itemId": "armor-watch-plate",
+          "weight": 14
+        },
+        {
+          "itemId": "potion-large",
+          "weight": 14
+        },
+        {
+          "itemId": "relic-swiftstep-sigil",
+          "weight": 14
+        },
+        {
+          "itemId": "relic-tollkeepers-mark",
+          "weight": 14
+        },
+        {
+          "itemId": "weapon-ember-fang",
+          "weight": 7
+        },
+        {
+          "itemId": "armor-warden-shell",
+          "weight": 7
+        },
+        {
+          "itemId": "relic-hawkeye-charm",
+          "weight": 7
+        },
+        {
+          "itemId": "weapon-furnace-maul",
+          "weight": 3
+        },
+        {
+          "itemId": "relic-heart-of-ash",
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "enemy-default",
+      "entries": [
+        {
+          "itemId": "potion-small",
+          "weight": 55
+        },
+        {
+          "itemId": "potion-large",
+          "weight": 55
+        },
+        {
+          "itemId": "weapon-rusty-shortsword",
+          "weight": 22
+        },
+        {
+          "itemId": "armor-leather-jerkin",
+          "weight": 22
+        },
+        {
+          "itemId": "potion-small",
+          "weight": 22
+        },
+        {
+          "itemId": "weapon-ember-fang",
+          "weight": 4
+        },
+        {
+          "itemId": "weapon-furnace-maul",
+          "weight": 4
+        },
+        {
+          "itemId": "armor-warden-shell",
+          "weight": 4
+        },
+        {
+          "itemId": "relic-heart-of-ash",
+          "weight": 4
+        },
+        {
+          "itemId": "relic-hawkeye-charm",
+          "weight": 4
+        }
+      ]
+    }
+  ],
+  "questTemplates": [
+    {
+      "id": "slay-plentiful",
+      "kind": "slay",
+      "titles": [
+        "Thin Their Numbers",
+        "{count} Fewer Below",
+        "Cull the {enemy}s"
+      ],
+      "targetCountMin": 3,
+      "targetCountMax": 5,
+      "rewardGoldMin": 18,
+      "rewardGoldMax": 36,
+      "rewardXpMin": 20,
+      "rewardXpMax": 40,
+      "offerTexts": [
+        "They breed faster than we bury them. Thin their numbers.",
+        "Every one you drop is a door we don't barricade."
+      ],
+      "completeTexts": [
+        "The halls breathe easier. Take this.",
+        "Well struck. The watch remembers."
+      ]
+    },
+    {
+      "id": "collect-potion-small",
+      "kind": "collect",
+      "titles": [
+        "Field Medicine ({count})",
+        "Draughts for the Watch"
+      ],
+      "targetCountMin": 2,
+      "targetCountMax": 3,
+      "rewardGoldMin": 16,
+      "rewardGoldMax": 32,
+      "rewardXpMin": 16,
+      "rewardXpMax": 30,
+      "rewardItemId": "potion-large",
+      "offerTexts": [
+        "My kit ran dry three landings ago. Secure what draughts you find.",
+        "Bring in any ember draughts you can spare the trouble for."
+      ],
+      "completeTexts": [
+        "You may have saved lives today. Mine included.",
+        "That'll keep. Good hunting."
+      ]
+    },
+    {
+      "id": "explore-rooms",
+      "kind": "explore",
+      "titles": [
+        "Chart the {adj} Halls",
+        "Walk the Dark ({count} Rooms)"
+      ],
+      "targetCountMin": 4,
+      "targetCountMax": 6,
+      "rewardGoldMin": 20,
+      "rewardGoldMax": 40,
+      "rewardXpMin": 22,
+      "rewardXpMax": 44,
+      "offerTexts": [
+        "No map survives down here. Walk it yourself, then.",
+        "We chart by candlelight and corpse-count. Add your share."
+      ],
+      "completeTexts": [
+        "So that's the shape of the place. Grim comfort.",
+        "Your steps count for something after all."
+      ]
+    }
+  ],
+  "npcDefs": [
+    {
+      "id": "elder-quartermaster",
+      "role": "questgiver",
+      "firstNamePool": [
+        "Rowan",
+        "Edrik",
+        "Maren",
+        "Osric"
+      ],
+      "titlePool": [
+        "Elder of the Last Watch",
+        "Quartermaster Below",
+        "Reader of Stairs"
+      ],
+      "idleLines": [
+        "Keep your blade close and your lamp closer.",
+        "The dark listens. Give it nothing.",
+        "Deeper lies the heat. Deeper lies the why.",
+        "Every ember you carry is somebody's unfinished prayer."
+      ],
+      "color": "#c9b98a"
+    },
+    {
+      "id": "peddler",
+      "role": "merchant",
+      "firstNamePool": [
+        "Marla",
+        "Vess",
+        "Hobb",
+        "Isket"
+      ],
+      "titlePool": [
+        "Peddler of the Depths",
+        "Coincount",
+        "The Reasonable Vulture"
+      ],
+      "idleLines": [
+        "Fair prices, fair odds. Mostly fair.",
+        "Coin first, heroics after.",
+        "Everything down here is for sale except the way out."
+      ],
+      "color": "#7fc8a9"
+    }
+  ],
+  "floors": [
+    {
+      "depth": 1,
+      "mapWidth": 41,
+      "mapHeight": 41,
+      "roomTargetMin": 5,
+      "roomTargetMax": 6,
+      "enemyBudgetBase": 5,
+      "enemyBudgetPerDepth": 1.6,
+      "spawnTable": [
+        {
+          "enemyId": "ooze",
+          "weight": 34
+        },
+        {
+          "enemyId": "imp",
+          "weight": 38
+        },
+        {
+          "enemyId": "skitter",
+          "weight": 26
+        }
+      ],
+      "keyRequired": false,
+      "chestCount": 3,
+      "hasShrine": true,
+      "npcIds": [
+        "elder-quartermaster",
+        "peddler"
+      ],
+      "questCount": 2,
+      "floorNameTemplates": [
+        "The {adj} Stairs",
+        "Molten Stairs",
+        "The Stairs of Cindervault"
+      ],
+      "ambientTint": "rgb(26,32,48)",
+      "musicScaleId": "minorPentatonic"
+    },
+    {
+      "depth": 2,
+      "mapWidth": 44,
+      "mapHeight": 44,
+      "roomTargetMin": 5,
+      "roomTargetMax": 7,
+      "enemyBudgetBase": 5.4,
+      "enemyBudgetPerDepth": 1.6,
+      "spawnTable": [
+        {
+          "enemyId": "spitter",
+          "weight": 34
+        },
+        {
+          "enemyId": "brute",
+          "weight": 38
+        },
+        {
+          "enemyId": "ooze",
+          "weight": 26
+        },
+        {
+          "enemyId": "imp",
+          "weight": 14
+        }
+      ],
+      "keyRequired": true,
+      "chestCount": 2,
+      "hasShrine": true,
+      "npcIds": [
+        "elder-quartermaster"
+      ],
+      "questCount": 1,
+      "floorNameTemplates": [
+        "The {adj} Archives",
+        "Smoldering Archives",
+        "The Archives of Cindervault"
+      ],
+      "ambientTint": "rgb(32,32,41)",
+      "musicScaleId": "dorian"
+    },
+    {
+      "depth": 3,
+      "mapWidth": 47,
+      "mapHeight": 47,
+      "roomTargetMin": 5,
+      "roomTargetMax": 7,
+      "enemyBudgetBase": 5.8,
+      "enemyBudgetPerDepth": 1.6,
+      "spawnTable": [
+        {
+          "enemyId": "wisp",
+          "weight": 34
+        },
+        {
+          "enemyId": "hulk",
+          "weight": 38
+        },
+        {
+          "enemyId": "spitter",
+          "weight": 26
+        },
+        {
+          "enemyId": "brute",
+          "weight": 14
+        }
+      ],
+      "keyRequired": true,
+      "chestCount": 3,
+      "hasShrine": true,
+      "npcIds": [],
+      "questCount": 1,
+      "floorNameTemplates": [
+        "The {adj} Cisterns",
+        "Shivering Cisterns",
+        "The Cisterns of Cindervault"
+      ],
+      "ambientTint": "rgb(38,31,33)",
+      "musicScaleId": "minorPentatonic"
+    },
+    {
+      "depth": 4,
+      "mapWidth": 50,
+      "mapHeight": 50,
+      "roomTargetMin": 5,
+      "roomTargetMax": 8,
+      "enemyBudgetBase": 6.2,
+      "enemyBudgetPerDepth": 1.6,
+      "spawnTable": [
+        {
+          "enemyId": "wisp",
+          "weight": 34
+        },
+        {
+          "enemyId": "hulk",
+          "weight": 38
+        },
+        {
+          "enemyId": "spitter",
+          "weight": 26
+        },
+        {
+          "enemyId": "brute",
+          "weight": 14
+        }
+      ],
+      "keyRequired": true,
+      "bossId": "warden",
+      "chestCount": 2,
+      "hasShrine": true,
+      "npcIds": [],
+      "questCount": 0,
+      "floorNameTemplates": [
+        "The {adj} Warrens",
+        "Ashen Warrens",
+        "The Warrens of Cindervault"
+      ],
+      "ambientTint": "rgb(44,31,26)",
+      "musicScaleId": "phrygian"
+    }
+  ],
+  "narrative": {
+    "worldName": "Cindervault",
+    "premise": "Cindervault was built to contain a spark that never cooled. The wardens are gone. The doors are open. The heat is patient.",
+    "floorAdjectives": [
+      "Echoing",
+      "Silent",
+      "Forgotten",
+      "Molten",
+      "Warded",
+      "Sooty",
+      "Smoldering",
+      "Hollow",
+      "Rusted",
+      "Shivering",
+      "Cracked",
+      "Nameless",
+      "Ashen",
+      "Pale",
+      "Withered",
+      "Sunken",
+      "Flooded",
+      "Blackened",
+      "Rootbound",
+      "Broken"
+    ],
+    "floorNouns": [
+      "Vaults",
+      "Stairs",
+      "Archives",
+      "Cisterns",
+      "Warrens",
+      "Court",
+      "Kilns",
+      "Galleries",
+      "Approach",
+      "Passage",
+      "Foundry",
+      "Undercroft",
+      "Depths",
+      "Halls"
+    ],
+    "itemPrefixes": {
+      "common": [
+        "Worn",
+        "Plain"
+      ],
+      "uncommon": [
+        "Tempered",
+        "Watch-issue"
+      ],
+      "rare": [
+        "Runed",
+        "Ember-touched"
+      ],
+      "epic": [
+        "Furnace-bound",
+        "Godspark"
+      ]
+    },
+    "loreFragments": [
+      "The wardens drew lots. The loser kept the last shift.",
+      "Maps lie at the fourth landing. Trust your feet instead.",
+      "What you hear dripping is not water.",
+      "The furnace was never meant to go cold.",
+      "They sealed the stairs from below, not above.",
+      "Some doors remember being opened and resent it."
+    ],
+    "victoryText": "The furnace breathes again. Dawn finds you climbing, singed but grinning.",
+    "defeatText": "Your ember joins the others down here. Someone will find it."
+  },
+  "audio": {
+    "masterVolume": 0.85,
+    "sfxVolume": 0.9,
+    "musicVolume": 0.32,
+    "musicTempoBpm": 90,
+    "scales": {
+      "minorPentatonic": [
+        220,
+        261.63,
+        293.66,
+        329.63,
+        392
+      ],
+      "dorian": [
+        220,
+        246.94,
+        261.63,
+        293.66,
+        329.63,
+        392,
+        440
+      ],
+      "phrygian": [
+        220,
+        233.08,
+        261.63,
+        293.66,
+        311.13,
+        349.23,
+        415.3
+      ]
+    },
+    "sfx": {
+      "swing": {
+        "wave": "sawtooth",
+        "freqStart": 340,
+        "freqEnd": 130,
+        "durationSec": 0.12,
+        "volume": 0.42,
+        "sweepExp": true
+      },
+      "hit": {
+        "wave": "square",
+        "freqStart": 210,
+        "freqEnd": 82,
+        "durationSec": 0.1,
+        "volume": 0.5,
+        "sweepExp": true
+      },
+      "hurt": {
+        "wave": "square",
+        "freqStart": 150,
+        "freqEnd": 68,
+        "durationSec": 0.22,
+        "volume": 0.62,
+        "sweepExp": true
+      },
+      "pickup": {
+        "wave": "triangle",
+        "freqStart": 520,
+        "freqEnd": 900,
+        "durationSec": 0.09,
+        "volume": 0.38,
+        "sweepExp": true
+      },
+      "buy": {
+        "wave": "triangle",
+        "freqStart": 660,
+        "freqEnd": 1180,
+        "durationSec": 0.11,
+        "volume": 0.4,
+        "sweepExp": true
+      },
+      "levelUp": {
+        "wave": "triangle",
+        "freqStart": 330,
+        "freqEnd": 990,
+        "durationSec": 0.5,
+        "volume": 0.48,
+        "sweepExp": true
+      },
+      "death": {
+        "wave": "noise",
+        "freqStart": 320,
+        "freqEnd": 55,
+        "durationSec": 0.7,
+        "volume": 0.58,
+        "sweepExp": true
+      },
+      "portal": {
+        "wave": "sine",
+        "freqStart": 170,
+        "freqEnd": 540,
+        "durationSec": 0.6,
+        "volume": 0.4,
+        "sweepExp": true
+      },
+      "dodge": {
+        "wave": "noise",
+        "freqStart": 900,
+        "freqEnd": 220,
+        "durationSec": 0.14,
+        "volume": 0.3,
+        "sweepExp": true
+      },
+      "chest": {
+        "wave": "triangle",
+        "freqStart": 250,
+        "freqEnd": 520,
+        "durationSec": 0.28,
+        "volume": 0.44,
+        "sweepExp": true
+      },
+      "victory": {
+        "wave": "triangle",
+        "freqStart": 392,
+        "freqEnd": 784,
+        "durationSec": 0.8,
+        "volume": 0.5,
+        "sweepExp": true
+      }
+    }
+  }
+}

@@ -180,6 +180,8 @@ export interface SimState {
 
   keyCollected: boolean;
   exitUnlocked: boolean;
+  /** Static decor for the current floor. */
+  floorDecor: { torches: Vec2[] };
 
   /** Room ids visited this floor (for explore quests + QA). */
   visitedRoomIds: number[];

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ember Depths</title>
+<style>
+  :root {
+    --panel: #141824;
+    --panel-edge: #2a3247;
+    --text: #e8e6df;
+    --dim: #9aa0ae;
+    --accent: #ffb454;
+    --danger: #ff5a5a;
+    --good: #7ec850;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; background: #0b0d14; }
+  body { font-family: "SF Mono", Menlo, Consolas, monospace; color: var(--text); }
+  #game { display: block; width: 100vw; height: 100vh; image-rendering: pixelated; cursor: crosshair; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-edge);
+    border-radius: 6px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.5);
+  }
+
+  /* ---------- HUD ---------- */
+  #hud {
+    position: fixed; left: 16px; top: 16px; width: 280px;
+    padding: 12px; pointer-events: none; z-index: 10;
+  }
+  .bar { height: 14px; border-radius: 3px; background: #232735; overflow: hidden; margin-bottom: 6px; position: relative; }
+  .bar > div { height: 100%; transition: width .15s ease-out; }
+  #hpFill { background: linear-gradient(90deg,#c23a3a,#ff6b5a); width: 100%; }
+  #xpFill { background: linear-gradient(90deg,#3a7ac2,#5ad0ff); width: 0%; }
+  #stamFill { background: linear-gradient(90deg,#c2a23a,#ffe08a); width: 100%; height: 6px; }
+  .bar-label { font-size: 10px; color: var(--dim); position: absolute; right: 4px; top: 1px; text-shadow: 0 1px 2px #000; }
+  #hudStats { font-size: 12px; color: var(--dim); display: flex; gap: 12px; margin-top: 4px; }
+  #hudStats b { color: var(--text); }
+
+  #quests {
+    position: fixed; right: 16px; top: 16px; width: 260px;
+    padding: 10px 12px; font-size: 11px; z-index: 10; pointer-events: none;
+  }
+  #quests h3 { font-size: 11px; color: var(--accent); margin-bottom: 6px; letter-spacing: 1px; }
+  .quest { margin-bottom: 8px; }
+  .quest .qtitle { color: var(--text); }
+  .quest .qobj { color: var(--dim); margin-left: 10px; }
+  .quest.done .qtitle { color: var(--good); text-decoration: line-through; }
+
+  #minimapWrap { position: fixed; right: 16px; bottom: 16px; padding: 8px; z-index: 10; pointer-events: none; }
+  #minimap { display: block; opacity: .92; }
+
+  /* ---------- Overlays ---------- */
+  .overlay {
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(5,7,12,.78); z-index: 50; backdrop-filter: blur(3px);
+  }
+  .overlay.hidden { display: none; }
+  .card { min-width: 420px; max-width: 560px; padding: 28px 32px; }
+  .card h1 { font-size: 26px; letter-spacing: 2px; color: var(--accent); margin-bottom: 6px; }
+  .card h2 { font-size: 18px; margin-bottom: 14px; }
+  .card p { font-size: 13px; color: var(--dim); line-height: 1.55; margin-bottom: 10px; }
+  .card .tagline { color: var(--text); font-style: italic; margin-bottom: 16px; }
+  .btn {
+    display: inline-block; border: 1px solid var(--panel-edge); background: #1d2334; color: var(--text);
+    font: inherit; font-size: 13px; padding: 9px 18px; border-radius: 4px; cursor: pointer; margin: 4px 6px 4px 0;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #14100a; font-weight: bold; border-color: var(--accent); }
+  .btn.primary:hover { filter: brightness(1.1); color: #14100a; }
+  .btn:disabled { opacity: .4; cursor: default; }
+  kbd {
+    background:#232735;border:1px solid #38405a;border-bottom-width:2px;border-radius:3px;
+    padding:1px 6px;font-size:11px;color:var(--accent);
+  }
+  .controls-grid { display:grid; grid-template-columns:auto 1fr; gap:6px 14px; font-size:12px; margin: 12px 0; align-items:center; }
+  .controls-grid span { color: var(--dim); }
+  input[type="text"] {
+    background:#0e1119; border:1px solid var(--panel-edge); color:var(--text);
+    font:inherit; font-size:13px; padding:8px 10px; border-radius:4px; width: 180px;
+  }
+  .row { display:flex; align-items:center; gap:10px; margin: 8px 0; }
+  .stat-line { font-size: 13px; margin: 4px 0; color: var(--dim); }
+  .stat-line b { color: var(--text); }
+
+  /* ---------- Dialogue / Shop ---------- */
+  #dialogue {
+    position: fixed; left: 50%; bottom: 42px; transform: translateX(-50%);
+    width: 620px; max-width: 92vw; padding: 16px 20px; z-index: 30;
+  }
+  #dialogue .speaker { color: var(--accent); font-size: 12px; letter-spacing: 1px; margin-bottom: 6px; }
+  #dialogue .line { font-size: 14px; line-height: 1.5; margin-bottom: 10px; }
+  #dialogue .actions { display:flex; gap:8px; flex-wrap:wrap; }
+
+  #shopPanel {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 480px; max-width: 92vw; padding: 20px; z-index: 40; display:none;
+  }
+  #shopPanel h2 { color: var(--accent); font-size:16px; margin-bottom: 10px; }
+  .shop-item { display:flex; justify-content:space-between; align-items:center; padding:7px 8px; border-radius:4px; font-size:12px; }
+  .shop-item:nth-child(odd){ background:#181d2c; }
+  .shop-item .name{ flex:1; }
+  .shop-item .rarity-common{color:#9aa0ae}.shop-item .rarity-uncommon{color:#7ec850}
+  .shop-item .rarity-rare{color:#5ad0ff}.shop-item .rarity-epic{color:#c95aff}
+
+  /* ---------- Inventory ---------- */
+  #inventory {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 520px; max-width: 94vw; padding: 20px; z-index: 40; display:none;
+  }
+  #inventory h2 { color: var(--accent); font-size: 16px; margin-bottom: 12px; }
+  #invGrid { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; }
+  .inv-slot {
+    border:1px solid var(--panel-edge); border-radius:4px; min-height:64px; padding:6px;
+    font-size:11px; background:#10141f; cursor:pointer; position:relative;
+  }
+  .inv-slot:hover { border-color: var(--accent); }
+  .inv-slot .iname { color:var(--text); margin-bottom:3px; }
+  .inv-slot .idesc { color:var(--dim); font-size:10px; line-height:1.35; }
+  .inv-slot.equipped { border-color: var(--good); }
+  .inv-slot .eqbadge { position:absolute; top:4px; right:6px; color:var(--good); font-size:9px; }
+  #equipRow { display:flex; gap:10px; margin-bottom:12px; font-size:11px; }
+  #equipRow .eq { flex:1; border:1px dashed var(--panel-edge); border-radius:4px; padding:8px; color:var(--dim); }
+  #equipRow .eq b { color: var(--text); display:block; margin-bottom:2px; }
+
+  #toasts {
+    position: fixed; left: 50%; top: 76px; transform: translateX(-50%);
+    z-index: 25; pointer-events: none; text-align: center;
+  }
+  .toast {
+    background: rgba(20,24,36,.92); border:1px solid var(--panel-edge); border-radius:4px;
+    padding: 6px 14px; font-size: 12px; margin-bottom: 6px; animation: toastIn .18s ease-out;
+  }
+  @keyframes toastIn { from { opacity:0; transform:translateY(-8px);} to {opacity:1;} }
+
+  #floorBanner {
+    position: fixed; left: 50%; top: 34%; transform: translate(-50%,-50%);
+    font-size: 22px; letter-spacing: 3px; color: var(--accent); z-index: 20;
+    text-shadow: 0 2px 12px rgba(0,0,0,.8); opacity: 0; transition: opacity .5s; pointer-events:none;
+    text-align: center;
+  }
+  #vignetteHurt {
+    position: fixed; inset: 0; pointer-events: none; z-index: 15;
+    box-shadow: inset 0 0 120px 40px rgba(200,30,30,0);
+    transition: box-shadow .25s ease-out;
+  }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="hud" class="panel">
+  <div class="bar"><div id="hpFill"></div><span class="bar-label" id="hpLabel">32/32</span></div>
+  <div class="bar" style="height:8px"><div id="xpFill"></div><span class="bar-label" id="xpLabel">LV 1</span></div>
+  <div class="bar" style="height:5px"><div id="stamFill"></div></div>
+  <div id="hudStats">
+    <span>ATK <b id="statAtk">6</b></span>
+    <span>DEF <b id="statDef">0</b></span>
+    <span>GOLD <b id="statGold">0</b></span>
+    <span id="statDepth">B1</span>
+  </div>
+</div>
+
+<div id="quests" class="panel"><h3>JOURNAL</h3><div id="questList"></div></div>
+
+<div id="minimapWrap" class="panel"><canvas id="minimap" width="180" height="180"></canvas></div>
+
+<div id="toasts"></div>
+<div id="floorBanner"></div>
+<div id="vignetteHurt"></div>
+
+<div id="dialogue" class="panel hidden">
+  <div class="speaker" id="dlgSpeaker"></div>
+  <div class="line" id="dlgLine"></div>
+  <div class="actions" id="dlgActions"></div>
+</div>
+
+<div id="shopPanel" class="panel">
+  <h2 id="shopTitle">Shop</h2>
+  <div id="shopItems"></div>
+  <div style="margin-top:10px;text-align:right"><button class="btn" id="shopClose">Leave (Esc)</button></div>
+</div>
+
+<div id="inventory" class="panel">
+  <h2>Inventory</h2>
+  <div id="equipRow"></div>
+  <div id="invGrid"></div>
+  <p style="font-size:11px;color:var(--dim);margin-top:10px">Click an item to equip / use. Potions heal. Relics passively boost you (2 slots).</p>
+</div>
+
+<div id="titleScreen" class="overlay">
+  <div class="card panel">
+    <h1 id="gameTitle">EMBER DEPTHS</h1>
+    <p class="tagline" id="gameTagline">Descend. Burn bright.</p>
+    <p id="premiseText"></p>
+    <div style="margin:14px 0">
+      <button class="btn primary" id="btnNewRun">New Descent</button>
+      <button class="btn" id="btnContinue">Continue</button>
+      <button class="btn" id="btnHow">How to Play</button>
+    </div>
+    <div class="row"><span style="font-size:12px;color:var(--dim)">Seed (optional):</span><input type="text" id="seedInput" placeholder="random" /></div>
+    <p id="continueInfo" style="font-size:11px"></p>
+  </div>
+</div>
+
+<div id="howScreen" class="overlay hidden">
+  <div class="card panel">
+    <h2>How to Play</h2>
+    <div class="controls-grid">
+      <kbd>WASD</kbd><span>Move</span>
+      <kbd>Mouse</kbd><span>Aim · Left-click to attack</span>
+      <kbd>Space</kbd><span>Dodge roll (i-frames, costs stamina)</span>
+      <kbd>E</kbd><span>Talk / open chests / shrine / descend portal</span>
+      <kbd>Q</kbd><span>Drink potion</span>
+      <kbd>I</kbd><span>Inventory & equipment</span>
+      <kbd>Esc</kbd><span>Pause / close panels</span>
+    </div>
+    <p>Find the key, slay the guardian of the final floor, and reach the portal on each level to descend. Quests from survivors pay gold and XP. The shrine heals — once.</p>
+    <button class="btn primary" id="howBack">Back</button>
+  </div>
+</div>
+
+<div id="pauseScreen" class="overlay hidden">
+  <div class="card panel">
+    <h2>Paused</h2>
+    <div>
+      <button class="btn primary" id="btnResume">Resume</button>
+      <button class="btn" id="btnSaveGame">Save Game</button>
+      <button class="btn" id="btnMute">Toggle Sound</button>
+      <button class="btn" id="btnQuitToTitle">Quit to Title</button>
+    </div>
+    <p id="saveStatus" style="margin-top:10px"></p>
+  </div>
+</div>
+
+<div id="deathScreen" class="overlay hidden">
+  <div class="card panel">
+    <h1 style="color:var(--danger)">YOU DIED</h1>
+    <p id="deathCause" class="tagline"></p>
+    <div id="deathStats"></div>
+    <button class="btn primary" id="btnDeathTitle">Return to Title</button>
+  </div>
+</div>
+
+<div id="victoryScreen" class="overlay hidden">
+  <div class="card panel">
+    <h1 style="color:var(--accent)">VICTORY</h1>
+    <p id="victoryText" class="tagline"></p>
+    <div id="victoryStats"></div>
+    <button class="btn primary" id="btnVictoryTitle">Return to Title</button>
+  </div>
+</div>
+
+<script src="./content.js"></script>
+<script src="./game.js"></script>
+</body>
+</html>
