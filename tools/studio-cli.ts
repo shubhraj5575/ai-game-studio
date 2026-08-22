@@ -12,12 +12,16 @@ function argValue(flag: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-const seedCount = Number(argValue("--seeds") ?? 3);
-const loops = Number(argValue("--loops") ?? 3);
+function safeInt(raw: string | undefined, fallback: number): number {
+  const n = Number(raw);
+  return Number.isFinite(n) && Number.isInteger(n) ? n : fallback;
+}
+const seedCount = Math.max(1, Math.min(safeInt(argValue("--seeds"), 3), 12));
+const loops = Math.max(0, Math.min(safeInt(argValue("--loops"), 3), 8));
 const skipBuild = process.argv.includes("--skip-build");
 
 const seeds: number[] = [];
-for (let i = 0; i < Math.max(1, Math.min(seedCount, 12)); i++) {
+for (let i = 0; i < seedCount; i++) {
   seeds.push(101 + i * 101);
 }
 

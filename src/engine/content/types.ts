@@ -249,6 +249,12 @@ export class ContentValidationError extends Error {
 }
 
 /** Structural + semantic validation used by the Programmer agent, QA, and save/load. */
+/** Reject non-finite and absurd magnitudes that could hang the engine. */
+function finiteBounded(v: number | undefined, maxAbs: number): boolean {
+  if (v === undefined || !Number.isFinite(v)) return false;
+  return Math.abs(v) <= maxAbs;
+}
+
 export function validateContentPack(pack: unknown): string[] {
   const p = pack as Partial<ContentPack> | null;
   const problems: string[] = [];
@@ -264,7 +270,8 @@ export function validateContentPack(pack: unknown): string[] {
   for (const e of p.enemies ?? []) {
     if (enemyIds.has(e.id)) problems.push(`duplicate enemy id ${e.id}`);
     enemyIds.add(e.id);
-    if (!(e.hp > 0)) problems.push(`enemy ${e.id}: hp must be > 0`);
+    if (!(e.hp > 0 && e.hp <= 1e6)) problems.push(`enemy ${e.id}: hp must be in (0, 1e6]`);
+    if (!finiteBounded(e.speed, 100)) problems.push(`enemy ${e.id}: speed must be finite ≤ 100`);
     if (!(e.speed >= 0)) problems.push(`enemy ${e.id}: speed must be >= 0`);
     if (!(e.damage >= 0)) problems.push(`enemy ${e.id}: damage must be >= 0`);
     if (!(e.radius > 0 && e.radius < 2)) problems.push(`enemy ${e.id}: radius out of range (0,2)`);
@@ -349,8 +356,11 @@ export function validateContentPack(pack: unknown): string[] {
   // Systems sanity.
   const st = p.systems;
   if (st) {
-    if (!(st.player.baseSpeed > 0)) problems.push("systems.player.baseSpeed must be > 0");
-    if (!(st.player.baseMaxHp > 0)) problems.push("systems.player.baseMaxHp must be > 0");
+    if (!(st.player.baseSpeed > 0 && st.player.baseSpeed <= 50)) problems.push("systems.player.baseSpeed must be in (0, 50]");
+    if (!(st.player.baseMaxHp > 0 && st.player.baseMaxHp <= 1e6)) problems.push("systems.player.baseMaxHp must be in (0, 1e6]");
+    for (const [k, v] of Object.entries(st.player) as Array<[string, number]>) {
+      if (typeof v === "number" && !Number.isFinite(v)) problems.push(`systems.player.${k} must be finite`);
+    }
     if (!(st.xpCurve.base > 0 && st.xpCurve.growth >= 1)) problems.push("systems.xpCurve invalid");
     if (!(st.player.attackRange > 0)) problems.push("systems.player.attackRange must be > 0");
     if (!(st.player.dodgeDurationSec > 0)) problems.push("systems.player.dodgeDurationSec must be > 0");

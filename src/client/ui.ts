@@ -223,8 +223,10 @@ export class UI {
       const price = sim.priceOf(def.value);
       const row = document.createElement("div");
       row.className = "shop-item";
+      // Rarity is pack-controlled text — treat it as untrusted like names.
+      const safeRarity = escapeHtml(def.rarity);
       row.innerHTML = `
-        <span class="name">${escapeHtml(def.name)} <span class="rarity-${def.rarity}">${def.rarity}</span></span>
+        <span class="name">${escapeHtml(def.name)} <span class="rarity-${safeRarity}">${safeRarity}</span></span>
         <span style="color:var(--gold,#ffd700)">${price}g</span>`;
       const btn = mkBtn("Buy", "", () => {
         const res = sim.buyItem(d.npcEntityId, itemId);
