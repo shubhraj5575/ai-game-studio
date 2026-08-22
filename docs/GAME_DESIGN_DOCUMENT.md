@@ -1,12 +1,12 @@
-# Slag Depths — Game Design Document
+# Cinder Warrens — Game Design Document
 
-> A top-down action roguelite (dungeon descent) where you descend 4 procedurally generated depths, fighting furious creatures, completing survivor quests, and carrying your ember to the bottom.
+> A top-down action roguelite (dungeon descent) where you descend 4 procedurally generated depths, fighting melancholy creatures, completing survivor quests, and carrying your ember to the bottom.
 
 ## Pillars
 
-- **Meaningful choices** — Gold, potions, gear, relics, and quests trade off against risk every floor.
-- **Fair randomness** — Procedural, yes — but reachability, quest items, and exits are guaranteed.
+- **Readable combat** — Every threat telegraphs before it hurts you; damage always has an address.
 - **Escalating descent** — Each depth is measurably more dangerous and measurably more rewarding.
+- **Fair randomness** — Procedural, yes — but reachability, quest items, and exits are guaranteed.
 
 ## Core Loop
 
@@ -113,7 +113,7 @@ One-shot full heal plus autosave per shrine; manual save available from pause me
 
 ## Generated Content Summary
 
-- **Title:** Slag Depths
+- **Title:** Cinder Warrens
 - **Depths:** 4 (B1, B2, B3, B4☠)
 - **Enemies:** Cinder Ooze, Ash Imp, Vault Skitterer, Soot Spitter, Gloom Brute, Gloom Wisp, Kiln Hulk, The Ashen Warden, Hearth-Mother
 - **Items:** 14 across rarities
@@ -136,6 +136,6 @@ One-shot full heal plus autosave per shrine; manual save available from pause me
 |---|---|---|---|---|---|---|---|---|
 | B1 | 41×41 | 5–6 | 7.0+2/d | — | — | ✔ | 2 | 2 |
 | B2 | 44×44 | 5–7 | 7.4+2/d | ✔ | — | ✔ | 1 | 1 |
-| B3 | 47×47 | 5–7 | 7.8+2/d | ✔ | — | — | 0 | 0 |
-| B4 | 50×50 | 5–8 | 8.2+2/d | ✔ | warden | ✔ | 0 | 1 |
+| B3 | 47×47 | 5–7 | 7.8+2/d | ✔ | — | ✔ | 0 | 0 |
+| B4 | 50×50 | 5–8 | 8.2+2/d | ✔ | warden | ✔ | 0 | 0 |
 

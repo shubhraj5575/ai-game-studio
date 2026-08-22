@@ -1,22 +1,22 @@
 {
   "meta": {
-    "title": "Slag Depths",
+    "title": "Cinder Warrens",
     "tagline": "Cindervault was built to contain a spark that never cooled.",
-    "version": "0.1.13",
+    "version": "0.1.14",
     "patch": 0,
-    "seedBase": 417220827,
+    "seedBase": 2215810678,
     "generator": "ai-game-studio",
-    "createdAtIso": "2026-08-22T20:50:22.856Z"
+    "createdAtIso": "2026-08-22T20:57:45.453Z"
   },
   "palette": {
-    "background": "#110909",
-    "wallTop": "#3e2a28",
-    "wallFace": "#261917",
-    "floorA": "#2f2320",
-    "floorB": "#271e1b",
-    "accent": "#47f581",
+    "background": "#111109",
+    "wallTop": "#3c3e28",
+    "wallFace": "#232617",
+    "floorA": "#2c2f20",
+    "floorB": "#24271b",
+    "accent": "#47b5f5",
     "danger": "#ef4539",
-    "friendly": "#e963de",
+    "friendly": "#e97263",
     "gold": "#ffd700",
     "uiPanel": "#141824ee",
     "uiText": "#e8e6df"
@@ -62,7 +62,7 @@
       "name": "Cinder Ooze",
       "minDepth": 1,
       "hp": 9,
-      "speed": 2.09,
+      "speed": 2.2,
       "damage": 4,
       "radius": 0.34,
       "attackRange": 0.9,
@@ -81,7 +81,7 @@
       "name": "Ash Imp",
       "minDepth": 1,
       "hp": 12,
-      "speed": 2.63,
+      "speed": 2.74,
       "damage": 4,
       "radius": 0.3,
       "attackRange": 6,
@@ -100,8 +100,8 @@
       "id": "skitter",
       "name": "Vault Skitterer",
       "minDepth": 1,
-      "hp": 12,
-      "speed": 2.18,
+      "hp": 10,
+      "speed": 2.21,
       "damage": 4,
       "radius": 0.34,
       "attackRange": 0.9,
@@ -120,7 +120,7 @@
       "name": "Soot Spitter",
       "minDepth": 2,
       "hp": 14,
-      "speed": 2.7,
+      "speed": 2.6,
       "damage": 5,
       "radius": 0.3,
       "attackRange": 6,
@@ -140,7 +140,7 @@
       "name": "Gloom Brute",
       "minDepth": 2,
       "hp": 13,
-      "speed": 1.77,
+      "speed": 1.9,
       "damage": 11,
       "radius": 0.44,
       "attackRange": 2.4,
@@ -158,8 +158,8 @@
       "id": "wisp",
       "name": "Gloom Wisp",
       "minDepth": 3,
-      "hp": 18,
-      "speed": 2.76,
+      "hp": 17,
+      "speed": 2.74,
       "damage": 7,
       "radius": 0.3,
       "attackRange": 6,
@@ -179,7 +179,7 @@
       "name": "Kiln Hulk",
       "minDepth": 3,
       "hp": 17,
-      "speed": 1.81,
+      "speed": 1.79,
       "damage": 14,
       "radius": 0.44,
       "attackRange": 2.4,
@@ -641,9 +641,9 @@
       "questCount": 2,
       "eliteChance": 0,
       "floorNameTemplates": [
-        "The {adj} Approach",
-        "Sooty Approach",
-        "The Approach of Cindervault"
+        "The {adj} Foundry",
+        "Flooded Foundry",
+        "The Foundry of Cindervault"
       ],
       "ambientTint": "rgb(26,32,48)",
       "musicScaleId": "minorPentatonic"
@@ -683,9 +683,9 @@
       "questCount": 1,
       "eliteChance": 0.12,
       "floorNameTemplates": [
-        "The {adj} Vaults",
-        "Molten Vaults",
-        "The Vaults of Cindervault"
+        "The {adj} Warrens",
+        "Blackened Warrens",
+        "The Warrens of Cindervault"
       ],
       "ambientTint": "rgb(32,32,41)",
       "musicScaleId": "dorian"
@@ -718,14 +718,14 @@
       ],
       "keyRequired": true,
       "chestCount": 3,
-      "hasShrine": false,
+      "hasShrine": true,
       "npcIds": [],
       "questCount": 0,
       "eliteChance": 0.24,
       "floorNameTemplates": [
-        "The {adj} Undercroft",
-        "Hollow Undercroft",
-        "The Undercroft of Cindervault"
+        "The {adj} Galleries",
+        "Silent Galleries",
+        "The Galleries of Cindervault"
       ],
       "ambientTint": "rgb(38,31,33)",
       "musicScaleId": "minorPentatonic"
@@ -761,12 +761,12 @@
       "chestCount": 2,
       "hasShrine": true,
       "npcIds": [],
-      "questCount": 1,
+      "questCount": 0,
       "eliteChance": 0.35,
       "floorNameTemplates": [
-        "The {adj} Halls",
-        "Flooded Halls",
-        "The Halls of Cindervault"
+        "The {adj} Court",
+        "Nameless Court",
+        "The Court of Cindervault"
       ],
       "ambientTint": "rgb(44,31,26)",
       "musicScaleId": "phrygian"
@@ -776,41 +776,41 @@
     "worldName": "Cindervault",
     "premise": "Cindervault was built to contain a spark that never cooled. The wardens are gone. The doors are open. The heat is patient.",
     "floorAdjectives": [
-      "Shivering",
       "Ashen",
-      "Rootbound",
-      "Sooty",
-      "Pale",
-      "Silent",
-      "Molten",
-      "Nameless",
+      "Echoing",
+      "Forgotten",
+      "Flooded",
+      "Shivering",
+      "Smoldering",
       "Blackened",
       "Hollow",
-      "Smoldering",
-      "Echoing",
-      "Flooded",
       "Warded",
-      "Broken",
-      "Sunken",
+      "Silent",
       "Cracked",
+      "Sooty",
+      "Nameless",
       "Rusted",
-      "Forgotten",
-      "Withered"
+      "Withered",
+      "Rootbound",
+      "Broken",
+      "Molten",
+      "Pale",
+      "Sunken"
     ],
     "floorNouns": [
-      "Passage",
-      "Approach",
       "Vaults",
-      "Undercroft",
-      "Halls",
-      "Cisterns",
-      "Archives",
-      "Warrens",
       "Foundry",
-      "Kilns",
+      "Warrens",
+      "Galleries",
       "Court",
       "Stairs",
-      "Galleries",
+      "Cisterns",
+      "Passage",
+      "Archives",
+      "Halls",
+      "Approach",
+      "Kilns",
+      "Undercroft",
       "Depths"
     ],
     "itemPrefixes": {
@@ -832,21 +832,21 @@
       ]
     },
     "loreFragments": [
+      "Some doors remember being opened and resent it.",
       "They sealed the stairs from below, not above.",
-      "Maps lie at the fourth landing. Trust your feet instead.",
       "The furnace was never meant to go cold.",
       "What you hear dripping is not water.",
-      "Some doors remember being opened and resent it.",
+      "Maps lie at the fourth landing. Trust your feet instead.",
       "The wardens drew lots. The loser kept the last shift."
     ],
     "victoryText": "The deep is quiet now — the good kind of quiet, for once.",
-    "defeatText": "Your ember joins the others down here. Someone will find it."
+    "defeatText": "The depths keep what they take."
   },
   "audio": {
     "masterVolume": 0.85,
     "sfxVolume": 0.9,
     "musicVolume": 0.32,
-    "musicTempoBpm": 101,
+    "musicTempoBpm": 87,
     "scales": {
       "minorPentatonic": [
         220,

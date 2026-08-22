@@ -129,3 +129,9 @@ its actual handler, pump frames, move via keydown events, pause/resume via
 Escape, save, quit, continue from save. Two integration tests; found the
 boot-early-return on missing CONTENT_PACK and missing AudioContext fallback
 along the way. Suite now: 12 files / 60 tests, CI green.
+
+## Studio run — 2026-08-22T20:57:50.180Z
+
+- Outcome: **released** at v0.1.14
+- QA: PASS · Perf: PASS · fix iterations: 0 · engine issues: 0
+- Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/2026-08-22T20-57-45/artifacts
