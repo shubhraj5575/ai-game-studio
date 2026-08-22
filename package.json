@@ -15,7 +15,8 @@
     "dev": "tsx tools/dev-server.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "qa": "tsx tools/qa-cli.ts",
+    "qa": "tsx tools/qa-smoke.ts",
+    "qa:wide": "tsx tools/qa-verify.ts",
     "bench": "tsx tools/bench.ts",
     "lint": "tsc --noEmit"
   },
