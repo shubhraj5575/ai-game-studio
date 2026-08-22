@@ -44,6 +44,8 @@ export interface StudioOptions {
   maxFixLoops?: number;
   skipBuild?: boolean;
   quietConsole?: boolean;
+  /** Optional stricter QA coverage gate (0..1) — used by tests of the loop itself. */
+  minCoverageGate?: number;
 }
 
 export interface StudioRunResult {
@@ -204,7 +206,8 @@ export function runStudio(options: StudioOptions = {}): StudioRunResult {
     metrics.time("phase.qa-and-fix", () => {
       enter("qa");
       qa.writeTestPlan();
-      let report = qa.runSuiteForBuild(seeds);
+      const gate = options.minCoverageGate;
+      let report = qa.runSuiteForBuild(seeds, gate !== undefined ? { minCoverageFraction: gate } : undefined);
       perf.measure();
 
       let loopIter = 0;
@@ -219,7 +222,7 @@ export function runStudio(options: StudioOptions = {}): StudioRunResult {
         const { autoFixable, engineLevel } = director.triage(allIssues);
         board.openIssues = allIssues.map((i) => i);
         board.engineIssues = engineLevel;
-        qa.recordRegressions(allIssues.filter((i) => i.severity === "blocker"));
+        qa.recordRegressions(allIssues.filter((i) => i.severity === "blocker"), rootDir);
         exit(true);
 
         enter("fix");
@@ -237,7 +240,7 @@ export function runStudio(options: StudioOptions = {}): StudioRunResult {
 
         enter("qa");
         seeds = [...seeds, ...widenSeeds(seeds)].slice(0, 6);
-        report = qa.runSuiteForBuild(seeds);
+        report = qa.runSuiteForBuild(seeds, gate !== undefined ? { minCoverageFraction: gate } : undefined);
         perf.measure();
       }
       exit(true);

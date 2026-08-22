@@ -41,3 +41,21 @@
 - Outcome: **released** at v0.1.5
 - QA: PASS · Perf: PASS · fix iterations: 0 · engine issues: 0
 - Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/2026-08-22T19-22-32/artifacts
+
+## Studio run — 2026-08-22T19:32:14.149Z
+
+- Outcome: **released** at v0.1.6
+- QA: PASS · Perf: PASS · fix iterations: 0 · engine issues: 0
+- Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/2026-08-22T19-32-11/artifacts
+
+## Studio run — 2026-08-22T19:32:47.762Z
+
+- Outcome: **released** at v0.1.7
+- QA: PASS · Perf: PASS · fix iterations: 0 · engine issues: 0
+- Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/fixloop-test/artifacts
+
+## Studio run — 2026-08-22T19:33:09.492Z
+
+- Outcome: **blocked**
+- QA: REJECT · Perf: PASS · fix iterations: 3 · engine issues: 0
+- Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/fixloop-test/artifacts

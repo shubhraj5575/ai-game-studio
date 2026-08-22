@@ -13,7 +13,8 @@ export type IssueKind =
   | "stuck"
   | "save-load"
   | "performance"
-  | "balance";
+  | "balance"
+  | "qa-coverage";
 
 export interface BugIssue {
   id: string;

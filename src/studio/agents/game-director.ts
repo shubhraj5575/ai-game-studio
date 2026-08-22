@@ -88,6 +88,7 @@ readonly id = "director";
     for (const issue of issues) {
       if (issue.kind === "performance") autoFixable.push(issue);
       else if (issue.kind === "balance") autoFixable.push(issue);
+      else if (issue.kind === "qa-coverage") autoFixable.push(issue);
       else if (issue.kind === "progression-blocker" && /unreachable|Key|budget|deficit/i.test(issue.title)) autoFixable.push(issue);
       else if (issue.kind === "stuck") autoFixable.push(issue);
       else engineLevel.push(issue); // crashes, save-load, invariants = engine suspects

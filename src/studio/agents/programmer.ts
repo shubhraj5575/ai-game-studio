@@ -165,6 +165,28 @@ readonly id = "programmer";
           applied.push(...this.easeDifficulty(pack, issue, iteration));
           break;
         }
+        case "qa-coverage": {
+          if (issue.title.includes("shopUsed")) {
+            // Guarantee a merchant on floor 1; the sim's shop-stock roller
+            // always includes the cheapest potion, so coverage follows.
+            const f1 = pack.floors[0];
+            const merchantId = pack.npcDefs.find((n) => n.role === "merchant")?.id;
+            const before = f1 ? f1.npcIds.join(",") : "";
+            if (f1 && merchantId && !f1.npcIds.includes(merchantId)) {
+              f1.npcIds.push(merchantId);
+            }
+            applied.push("coverage.merchantGuarantee");
+            this.recordFix(iteration, "coverage.merchantGuarantee", "floors[0].npcIds", before, f1?.npcIds.join(",") ?? "", issue.title);
+          } else if (issue.title.includes("shrineUsed")) {
+            const before = pack.floors.map((f) => f.hasShrine);
+            for (const f of pack.floors) f.hasShrine = true;
+            applied.push("coverage.shrinesEverywhere");
+            this.recordFix(iteration, "coverage.shrinesEverywhere", "floors[].hasShrine", before, pack.floors.map((f) => f.hasShrine), issue.title);
+          } else {
+            this.routeToEngine(issue);
+          }
+          break;
+        }
         default:
           this.routeToEngine(issue);
       }

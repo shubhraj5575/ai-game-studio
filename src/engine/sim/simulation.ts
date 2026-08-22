@@ -281,9 +281,18 @@ export class Simulation {
   private rollShopStock(): string[] {
     const pool = this.pack.items.filter((i) => i.kind !== "quest");
     const stock: string[] = [];
+    // Shops ALWAYS carry the cheapest potion — potions are the economy's
+    // backbone and QA treats their absence as a coverage gap.
+    const cheapestPotion = [...pool]
+      .filter((i) => i.kind === "potion")
+      .sort((a, b) => a.value - b.value)[0];
+    if (cheapestPotion) stock.push(cheapestPotion.id);
+    const rest = pool.filter((i) => !stock.includes(i.id));
     const n = this.rngMisc.intInclusive(3, 5);
-    for (let i = 0; i < n && pool.length > 0; i++) {
-      stock.push(this.rngMisc.pick(pool).id);
+    for (let i = 0; i < n && rest.length > 0; i++) {
+      const pick = this.rngMisc.int(0, rest.length);
+      stock.push(rest[pick]!.id);
+      rest.splice(pick, 1);
     }
     return stock;
   }

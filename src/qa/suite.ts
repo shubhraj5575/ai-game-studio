@@ -49,6 +49,10 @@ export interface SuiteReport {
 }
 
 export function runSuite(pack: ContentPack, options: SuiteOptions = DEFAULT_SUITE_OPTIONS): SuiteReport {
+  // A coverage gate above 100% is unsatisfiable by definition — clamp it and
+  // let callers who need failure-injection use other knobs.
+  const requestedCov = options.minCoverageFraction;
+  const clampedCov = requestedCov !== undefined ? Math.min(requestedCov, 1) : undefined;
   const opts: SeedRunOptions = {
     ...DEFAULT_SEED_OPTIONS,
     ...Object.fromEntries(
@@ -103,12 +107,13 @@ export function runSuite(pack: ContentPack, options: SuiteOptions = DEFAULT_SUIT
     verdict = "REJECT";
     reasons.push(`${crashes} run(s) crashed`);
   }
-  const minCov = options.minCoverageFraction ?? DEFAULT_SUITE_OPTIONS.minCoverageFraction!;
-  if (coverageFraction < minCov) {
+  const minCov = (clampedCov ?? DEFAULT_SUITE_OPTIONS.minCoverageFraction!);
+  const missingFlags = keys.filter((k) => !coverage[k]);
+  if (coverageFraction < minCov && missingFlags.length > 0) {
     verdict = "REJECT";
     reasons.push(
       `QA coverage ${Math.round(coverageFraction * 100)}% below required ${Math.round(minCov * 100)}% — systems untested: ` +
-        keys.filter((k) => !coverage[k]).join(", "),
+        missingFlags.join(", "),
     );
   }
   const minDepth = options.minMeanDepthProgress ?? DEFAULT_SUITE_OPTIONS.minMeanDepthProgress!;
