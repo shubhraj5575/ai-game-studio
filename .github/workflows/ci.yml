@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Unit + integration + regression tests
+        run: npx vitest run --reporter=dot
+      - name: Build game bundle
+        run: npm run build:game
+      - name: Headless QA smoke (3 seeds)
+        run: node tools/qa-smoke.mjs

@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.tsc-out/
+*.tsbuildinfo
+
+# Studio run artifacts (large; sample reports are committed under docs/reports)
+studio-output/
+logs/
+*.log
+
+# Coverage
+coverage/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local secrets — never commit
+.env
+.env.*
+*.pem
+*.key
+secrets.json

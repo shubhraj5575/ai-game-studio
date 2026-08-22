@@ -1,0 +1,29 @@
+{
+  "name": "ai-game-studio",
+  "version": "0.1.0",
+  "description": "A multi-agent autonomous game development studio that designs, builds, tests, and releases a genuinely playable game.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "studio": "tsx tools/studio-cli.ts",
+    "build:game": "tsx tools/build-game.ts",
+    "build:typecheck": "tsc --noEmit",
+    "dev": "tsx tools/dev-server.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "qa": "tsx tools/qa-cli.ts",
+    "bench": "tsx tools/bench.ts",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.24.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
