@@ -1,11 +1,11 @@
-# Cinder Foundry — Game Design Document
+# Furnace Undercroft — Game Design Document
 
-> A top-down action roguelite (dungeon descent) where you descend 4 procedurally generated depths, fighting smoldering creatures, completing survivor quests, and carrying your ember to the bottom.
+> A top-down action roguelite (dungeon descent) where you descend 4 procedurally generated depths, fighting mysterious creatures, completing survivor quests, and carrying your ember to the bottom.
 
 ## Pillars
 
-- **Readable combat** — Every threat telegraphs before it hurts you; damage always has an address.
 - **Meaningful choices** — Gold, potions, gear, relics, and quests trade off against risk every floor.
+- **Fair randomness** — Procedural, yes — but reachability, quest items, and exits are guaranteed.
 - **Escalating descent** — Each depth is measurably more dangerous and measurably more rewarding.
 
 ## Core Loop
@@ -113,7 +113,7 @@ One-shot full heal plus autosave per shrine; manual save available from pause me
 
 ## Generated Content Summary
 
-- **Title:** Cinder Foundry
+- **Title:** Furnace Undercroft
 - **Depths:** 4 (B1, B2, B3, B4☠)
 - **Enemies:** Cinder Ooze, Ash Imp, Vault Skitterer, Soot Spitter, Gloom Brute, Gloom Wisp, Kiln Hulk, The Ashen Warden, Hearth-Mother
 - **Items:** 14 across rarities
@@ -136,6 +136,6 @@ One-shot full heal plus autosave per shrine; manual save available from pause me
 |---|---|---|---|---|---|---|---|---|
 | B1 | 41×41 | 5–6 | 5.0+1.6/d | — | — | ✔ | 2 | 2 |
 | B2 | 44×44 | 5–7 | 5.4+1.6/d | ✔ | — | ✔ | 1 | 1 |
-| B3 | 47×47 | 5–7 | 5.8+1.6/d | ✔ | — | ✔ | 0 | 1 |
-| B4 | 50×50 | 5–8 | 6.2+1.6/d | ✔ | warden | ✔ | 0 | 0 |
+| B3 | 47×47 | 5–7 | 5.8+1.6/d | ✔ | — | — | 0 | 0 |
+| B4 | 50×50 | 5–8 | 6.2+1.6/d | ✔ | hearthmother | ✔ | 0 | 0 |
 

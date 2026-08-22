@@ -215,7 +215,7 @@ export class UI {
     wrap.innerHTML = "";
     const stock = sim.shopStock(d.npcEntityId);
     if (stock.length === 0) {
-      wrap.innerHTML = `<p style="color:var(--dim);font-size:12px">Sold out. The depths are hungry.</p>`;
+      wrap.innerHTML += `<p style="color:var(--dim);font-size:12px;margin-top:6px">Sold out. The depths are hungry.</p>`;
     }
     for (const itemId of stock) {
       const def: ItemDef | undefined = itemDef(this.pack, itemId);
@@ -236,6 +236,39 @@ export class UI {
       });
       row.appendChild(btn);
       wrap.appendChild(row);
+    }
+
+    // Sell section: unequipped gear and spare relics convert to gold.
+    const sellable = sim.state.inventory.filter((slot) => {
+      const def2 = itemDef(this.pack, slot.itemId);
+      return def2 && (def2.kind === "weapon" || def2.kind === "armor" || def2.kind === "relic" || def2.kind === "quest") &&
+        !sim.state.equipment.relics.includes(slot.itemId);
+    });
+    if (sellable.length > 0) {
+      const header = document.createElement("div");
+      header.style.cssText = "margin-top:12px;color:var(--accent);font-size:12px;letter-spacing:1px";
+      header.textContent = "SELL";
+      wrap.appendChild(header);
+      for (const slot of sellable) {
+        const def2 = itemDef(this.pack, slot.itemId)!;
+        const gain = sim.sellPrice(def2.value);
+        const row = document.createElement("div");
+        row.className = "shop-item";
+        const safeRarity = escapeHtml(def2.rarity);
+        row.innerHTML = `
+          <span class="name">${escapeHtml(def2.name)}${slot.qty > 1 ? ` ×${slot.qty}` : ""} <span class="rarity-${safeRarity}">${safeRarity}</span></span>
+          <span style="color:var(--dim)">+${gain}g</span>`;
+        const btn = mkBtn("Sell", "", () => {
+          const res = sim.sellItem(slot.itemId);
+          if (res === "ok") {
+            this.openShop(sim); // refresh stock + gold display
+          } else if (res === "equipped") {
+            flashPanel(this.els.shopPanel, "#c2a23a");
+          }
+        });
+        row.appendChild(btn);
+        wrap.appendChild(row);
+      }
     }
     this.show("shopPanel");
   }

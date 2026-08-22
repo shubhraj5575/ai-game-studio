@@ -985,6 +985,7 @@ export class Simulation {
     const gain = this.sellPrice(def.value);
     s.gold += gain;
     s.stats.goldEarned += gain;
+    gameBus.emit("sold", { itemId, gain });
     logEvent(s, "sell", `${itemId} +${gain}`);
     return "ok";
   }

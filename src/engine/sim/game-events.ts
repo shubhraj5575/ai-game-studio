@@ -22,6 +22,7 @@ export interface GameEvents {
   shrineUsed: { message: string };
   buy: { itemId: string; price: number };
   sellRejected: { reason: string };
+  sold: { itemId: string; gain: number };
   portalLocked: { reason: string };
   descend: { depth: number };
   death: { cause: string };

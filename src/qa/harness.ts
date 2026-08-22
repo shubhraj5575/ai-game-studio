@@ -111,6 +111,9 @@ function trackEvents(tracker: EventTracker): Array<() => void> {
   unsubs.push(on("eliteSeen", () => {
     tracker.coverage.eliteSeen = true;
   }));
+  unsubs.push(on("sold", () => {
+    tracker.coverage.soldItem = true;
+  }));
   return unsubs;
 }
 

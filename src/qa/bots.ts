@@ -126,6 +126,7 @@ export class ObjectiveBot implements BotPlayer {
       }
       if (!acted && d.canShop) {
         this.tryShop(sim, d.npcEntityId, p.hp / p.maxHp);
+        this.trySellJunk(sim);
       }
       // Business done? The dialogue's option lists are snapshots; recompute
       // from live quest status, then walk away to close the conversation.
@@ -386,6 +387,30 @@ export class ObjectiveBot implements BotPlayer {
     const potions = stock.filter((id) => id.includes("potion"));
     if (hpFrac < 0.8 && potions.length > 0) {
       sim.buyItem(npcId, potions[0]!);
+    }
+  }
+
+  /** Sell surplus gear (keeps one weapon/armor; never equipped relics). */
+  private trySellJunk(sim: Simulation): void {
+    const s = sim.state;
+    const sellable = s.inventory.filter((slot) => {
+      const def = sim.pack.items.find((i) => i.id === slot.itemId);
+      return def && (def.kind === "weapon" || def.kind === "armor");
+    });
+    // Keep the best weapon + best armor; sell the rest.
+    const keep = new Set<string>();
+    const bestWeapon = [...sellable]
+      .filter((x) => x.itemId.startsWith("weapon"))
+      .sort((a, b) => (sim.pack.items.find((i) => i.id === b.itemId)?.power ?? 0) - (sim.pack.items.find((i) => i.id === a.itemId)?.power ?? 0))[0];
+    if (bestWeapon) keep.add(bestWeapon.itemId);
+    const bestArmor = [...sellable]
+      .filter((x) => x.itemId.startsWith("armor"))
+      .sort((a, b) => (sim.pack.items.find((i) => i.id === b.itemId)?.defense ?? 0) - (sim.pack.items.find((i) => i.id === a.itemId)?.defense ?? 0))[0];
+    if (bestArmor) keep.add(bestArmor.itemId);
+
+    for (const slot of sellable) {
+      if (keep.has(slot.itemId)) continue;
+      if (sim.sellItem(slot.itemId) === "ok") break; // one per visit keeps dialogue flow simple
     }
   }
 

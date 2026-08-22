@@ -75,3 +75,9 @@ docs/SECURITY.md.
 - Full pipeline green: QA PASS · Perf PASS · Director approved · v0.1.9
 
 ---
+
+## Studio run — 2026-08-22T20:39:11.588Z
+
+- Outcome: **released** at v0.1.10
+- QA: PASS · Perf: PASS · fix iterations: 0 · engine issues: 0
+- Artifacts: /Users/shubhraj/Downloads/Ai Game Studio/studio-output/2026-08-22T20-39-09/artifacts
